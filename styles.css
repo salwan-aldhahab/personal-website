@@ -56,17 +56,35 @@ a:hover {
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
+}
+
+.logo__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.logo__name {
   font-weight: 700;
   letter-spacing: 0.5px;
   font-size: 2.5rem;
 }
 
+.logo__subtitle {
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Constrain logo image size */
 .logo img {
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
   border: 2px solid rgba(255, 255, 255, 0.12);
 }
 
@@ -95,7 +113,7 @@ a:hover {
 
 .hero__content {
   max-width: 780px;
-  margin-top: 64px;
+  margin-top: 32px; /* reduced from 64px */
   display: grid;
   gap: 12px;
 }
@@ -236,6 +254,12 @@ main {
   text-align: center;
   color: var(--muted);
   font-weight: 600;
+}
+
+.card-grid {
+  display: grid;
+  gap: 16px; /* adds space between project cards */
+  grid-row: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 @media (max-width: 640px) {
