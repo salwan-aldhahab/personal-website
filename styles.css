@@ -819,6 +819,316 @@ main {
   line-height: 1.5;
 }
 
+/* ── Animated pipeline hero (project 2) ── */
+.pipeline-hero {
+  background: linear-gradient(180deg, rgba(8, 14, 30, 0.9), rgba(11, 19, 43, 0.7));
+  border: 1px solid rgba(78, 205, 196, 0.16);
+  border-radius: var(--radius);
+  margin: 18px 0 4px;
+  padding: 22px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  position: relative;
+}
+
+.pipeline-hero__stage {
+  position: relative;
+  min-width: 64px;
+  padding: 14px 10px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.pipeline-hero__stage span {
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.pipeline-hero__sep {
+  color: var(--muted);
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+/* a glowing token that lights each stage in turn */
+.pipeline-hero__stage::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 10px;
+  border: 1px solid var(--accent-2);
+  box-shadow: 0 0 14px rgba(78, 205, 196, 0.6);
+  opacity: 0;
+  animation: pipe-pulse 5s linear infinite;
+}
+
+.pipeline-hero__stage:nth-child(1)::after { animation-delay: 0s; }
+.pipeline-hero__stage:nth-child(3)::after { animation-delay: 1s; }
+.pipeline-hero__stage:nth-child(5)::after { animation-delay: 2s; }
+.pipeline-hero__stage:nth-child(7)::after { animation-delay: 3s; }
+.pipeline-hero__stage:nth-child(9)::after { animation-delay: 4s; }
+
+@keyframes pipe-pulse {
+  0%, 18% { opacity: 1; }
+  20%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipeline-hero__stage::after { animation: none; opacity: 0; }
+}
+
+/* ── Valid/flush handshake diagram ── */
+.handshake {
+  background: linear-gradient(180deg, rgba(8, 14, 30, 0.6), rgba(11, 19, 43, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  margin-top: 14px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.handshake__stages {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 460px;
+}
+
+.handshake__stage {
+  flex: 1;
+  text-align: center;
+  padding: 12px 6px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.handshake__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 460px;
+  margin: 6px 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+}
+
+.handshake__line {
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+  position: relative;
+}
+
+.handshake__row--valid .handshake__line {
+  background: linear-gradient(90deg, rgba(78, 205, 196, 0.25), var(--accent-2));
+}
+
+.handshake__row--valid .handshake__line::after {
+  content: '▶';
+  position: absolute;
+  right: -4px;
+  top: -7px;
+  font-size: 0.6rem;
+  color: var(--accent-2);
+}
+
+.handshake__row--flush .handshake__line {
+  background: linear-gradient(90deg, var(--accent), rgba(247, 127, 0, 0.25));
+}
+
+.handshake__row--flush .handshake__line::before {
+  content: '◀';
+  position: absolute;
+  left: -4px;
+  top: -7px;
+  font-size: 0.6rem;
+  color: var(--accent);
+}
+
+.handshake__tag {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.handshake__row--valid .handshake__tag { color: var(--accent-2); }
+.handshake__row--flush .handshake__tag { color: var(--accent); }
+
+/* ── Finite-state-machine strip ── */
+.fsm {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 14px;
+  padding: 14px 6px;
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.fsm__state {
+  flex-shrink: 0;
+  min-width: 78px;
+  padding: 10px 8px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 2px solid var(--accent-2);
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.fsm__arrow {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 4px;
+  min-width: 56px;
+}
+
+.fsm__arrow span {
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.fsm__arrow::after {
+  content: '';
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  position: relative;
+}
+
+.fsm__arrow::before {
+  content: '▶';
+  font-size: 0.55rem;
+  color: var(--muted);
+  align-self: flex-end;
+  position: relative;
+  top: 6px;
+  right: -2px;
+}
+
+/* ── Instruction-format bit-field strips ── */
+.bitfield {
+  margin-top: 14px;
+}
+
+.bitfield + .bitfield { margin-top: 18px; }
+
+.bitfield__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  margin-bottom: 6px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.bitfield__row {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+}
+
+.bitfield__seg {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 8px 6px;
+  text-align: center;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bitfield__bits {
+  font-size: 0.6rem;
+  color: var(--muted);
+  font-family: "Courier New", Courier, monospace;
+  white-space: nowrap;
+}
+
+.bitfield__name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.bitfield__seg--op { border-color: rgba(247, 127, 0, 0.4); }
+.bitfield__seg--op .bitfield__name { color: var(--accent); }
+.bitfield__seg--reg .bitfield__name { color: var(--accent-2); }
+
+/* ── ALU operation grid ── */
+.op-group {
+  margin-top: 12px;
+}
+
+.op-group__label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.op-group .pill-list li {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.78rem;
+  color: var(--text);
+}
+
+/* ── VGA scan-line timing strip ── */
+.vga-scanline {
+  display: flex;
+  margin-top: 14px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.66rem;
+  font-family: "Courier New", Courier, monospace;
+  min-width: 0;
+}
+
+.vga-scanline div {
+  padding: 10px 6px;
+  text-align: center;
+  color: var(--text);
+}
+
+.vga-scanline .vga-active { flex: 5; background: rgba(78, 205, 196, 0.18); }
+.vga-scanline .vga-fp     { flex: 1; background: rgba(255, 255, 255, 0.04); color: var(--muted); }
+.vga-scanline .vga-sync   { flex: 1.5; background: rgba(247, 127, 0, 0.2); color: var(--accent); }
+.vga-scanline .vga-bp     { flex: 1; background: rgba(255, 255, 255, 0.04); color: var(--muted); }
+
 @media (max-width: 640px) {
   .nav {
     flex-wrap: wrap;

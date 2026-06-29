@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Two — Salwan Aldhahab</title>
+  <title>32-bit RISC-V Processor (UART + VGA) — Salwan Aldhahab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
         <img src="../images/profile.jpg" alt="Salwan Aldhahab headshot">
         <div class="logo__text">
           <span class="logo__name">Salwan Aldhahab</span>
-          <span class="logo__subtitle">Hardware & Software Engineer</span>
+          <span class="logo__subtitle">Hardware &amp; Software Engineer</span>
         </div>
       </div>
       <nav class="nav">
@@ -30,38 +30,465 @@
   </header>
 
   <div class="project-page">
+
     <div class="project-hero">
       <a href="../index.html#projects" class="back-link">← Back to projects</a>
-      <p class="eyebrow">Project 02 · Category</p>
-      <h1>Project Two</h1>
-      <p class="lede">A concise one-liner describing what this project does and why it matters.</p>
+      <p class="eyebrow">Project 02 · Digital Systems / FPGA</p>
+      <h1>32-bit RISC-V Processor (UART + VGA)</h1>
+      <p class="lede">A custom RV32I CPU on the DE10-Lite (Intel MAX 10) FPGA. 32-bit machine-code is streamed live over UART, processed by a five-stage pipeline coupled with explicit valid/flush handshakes, and the resulting register state is rendered in real time on a VGA display.</p>
       <ul class="pill-list">
-        <li>Tool A</li>
-        <li>Tool B</li>
-        <li>Tool C</li>
+        <li>Verilog</li>
+        <li>RISC-V RV32I</li>
+        <li>Intel MAX 10 FPGA</li>
+        <li>UART</li>
+        <li>VGA</li>
+        <li>Quartus / ModelSim</li>
       </ul>
+      <p class="eyebrow">EECS 3216 · York University — team project: Salwan Aldhahab, Jessica Buentipo, Quardin Lyttle, Karanpreet Raja</p>
+    </div>
+
+    <!-- Animated pipeline hero -->
+    <div class="pipeline-hero" aria-hidden="true">
+      <div class="pipeline-hero__stage">IF<span>Fetch</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">ID<span>Decode</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">EX<span>Execute</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">MEM<span>Memory</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">WB<span>Write-back</span></div>
     </div>
 
     <div class="section project-body">
+
+      <!-- System Overview -->
       <div>
-        <h2>Overview</h2>
-        <p>Describe the project at a high level. What is it, what does it do, and why did you build it? Give the reader enough context to understand the rest of the page.</p>
+        <h2>System Overview</h2>
+        <p>Instead of fixing a program in memory at synthesis time, the user streams 32-bit machine-code words from a host computer over a serial link — the processor loads each into program memory on the fly. The five-stage pipeline then fetches, decodes, executes, accesses memory, and writes back, while the architectural state (the register file) is surfaced for real-time observation. This makes an otherwise invisible datapath something an observer can watch as computation proceeds.</p>
+
+        <div class="arch-diagram">
+          <div class="arch-node arch-node--acquisition">
+            <span class="arch-node__title">Host PC</span>
+            <span class="arch-node__label">serial terminal</span>
+          </div>
+          <div class="arch-arrow">
+            <span class="arch-arrow__label">UART<br>ASCII bits</span>
+            <div class="arch-arrow__line"></div>
+          </div>
+          <div class="arch-node">
+            <span class="arch-node__title">serial_comm</span>
+            <span class="arch-node__label">UART RX/TX</span>
+          </div>
+          <div class="arch-arrow">
+            <span class="arch-arrow__label">byte</span>
+            <div class="arch-arrow__line"></div>
+          </div>
+          <div class="arch-node">
+            <span class="arch-node__title">ascii → bits</span>
+            <span class="arch-node__label">32-bit word</span>
+          </div>
+          <div class="arch-arrow">
+            <span class="arch-arrow__label">load</span>
+            <div class="arch-arrow__line"></div>
+          </div>
+          <div class="arch-node">
+            <span class="arch-node__title">IF · ID · EX · MEM · WB</span>
+            <span class="arch-node__label">5-stage pipeline</span>
+          </div>
+          <div class="arch-arrow">
+            <span class="arch-arrow__label">state</span>
+            <div class="arch-arrow__line"></div>
+          </div>
+          <div class="arch-node arch-node--visualisation">
+            <span class="arch-node__title">VGA / LEDR</span>
+            <span class="arch-node__label">register view</span>
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric">
+            <span class="metric__value">50 MHz</span>
+            <span class="metric__label">System clock</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">5</span>
+            <span class="metric__label">Pipeline stages</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">20</span>
+            <span class="metric__label">ALU operations</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">9600</span>
+            <span class="metric__label">UART baud</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">RV32I</span>
+            <span class="metric__label">Base ISA</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">16×</span>
+            <span class="metric__label">UART oversampling</span>
+          </div>
+        </div>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Tool / Technology</th><th>Role in the project</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Intel Quartus Prime Lite</td><td>Synthesis, place-and-route, bitstream generation</td></tr>
+            <tr><td>Questa / ModelSim</td><td>RTL simulation and waveform inspection</td></tr>
+            <tr><td>Verilog HDL</td><td>Hardware description for all modules</td></tr>
+            <tr><td>DE10-Lite (Intel MAX 10)</td><td>Target FPGA development board</td></tr>
+            <tr><td>USB-to-UART converter</td><td>Serial bridge between host PC and FPGA</td></tr>
+          </tbody>
+        </table>
       </div>
 
+      <!-- Hardware Platform -->
       <div>
-        <h2>What I built</h2>
-        <p>Go into more detail about the system or feature you designed. What were the key technical decisions? What constraints did you work within?</p>
+        <h2>Hardware Platform — DE10-Lite</h2>
+        <p>The design targets the Terasic DE10-Lite, built around an Intel MAX 10 (<code>10M50DAF484C7G</code>). All sequential logic runs on the single 50 MHz board clock; the UART derives its own oversampled bit-clock from it with a counter, so no PLL is needed for the core. Reset is taken from <code>KEY[0]</code>.</p>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Resource</th><th>Signal</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>50 MHz clock</td><td>MAX10_CLK1_50</td><td>System clock for all logic</td></tr>
+            <tr><td>Push-button 0</td><td>KEY[0]</td><td>Active-low reset</td></tr>
+            <tr><td>Slide switch 0</td><td>SW[0]</td><td>Manual flush / single-step into IF</td></tr>
+            <tr><td>GPIO pin 2</td><td>GPIO[2]</td><td>UART receive (RX) from host</td></tr>
+            <tr><td>GPIO pin 1</td><td>GPIO[1]</td><td>UART transmit (TX) to host</td></tr>
+            <tr><td>Red LEDs</td><td>LEDR[9:0]</td><td>Debug / register-state readout</td></tr>
+            <tr><td>VGA connector</td><td>VGA_R/G/B, HS, VS</td><td>Register-state visualisation</td></tr>
+          </tbody>
+        </table>
+
+        <p>One integration subtlety: the front-end peripherals (UART, ASCII converter) reset on a positive edge while the core modules reset on a negative edge, so the top level forms complementary <code>reset</code> / <code>negReset</code> signals — a reset-polarity split that was a recurring source of subtle bugs.</p>
       </div>
 
+      <!-- Pipeline & Control Model -->
       <div>
-        <h2>Challenges & learnings</h2>
-        <p>Describe any interesting problems you ran into and how you solved them. This is where you show depth — tradeoffs, debugging, and what you would do differently next time.</p>
+        <h2>Pipeline &amp; Control Model</h2>
+        <p>The core is a five-stage datapath with a pipeline register between each pair of stages. Rather than a textbook lock-step pipeline — which assumes every stage finishes in one cycle and instructions arrive continuously — each stage is a multi-cycle finite-state machine, and adjacent stages are coupled by an explicit handshake. This trades some throughput for robustness against a variable-latency, 9600-baud serial front end.</p>
+
+        <div class="arch-diagram">
+          <div class="arch-node arch-node--acquisition">
+            <span class="arch-node__title">IF</span>
+            <span class="arch-node__label">fetch</span>
+          </div>
+          <div class="arch-arrow"><span class="arch-arrow__label">IF/ID</span><div class="arch-arrow__line"></div></div>
+          <div class="arch-node">
+            <span class="arch-node__title">ID</span>
+            <span class="arch-node__label">decode</span>
+          </div>
+          <div class="arch-arrow"><span class="arch-arrow__label">ID/EX</span><div class="arch-arrow__line"></div></div>
+          <div class="arch-node">
+            <span class="arch-node__title">EX</span>
+            <span class="arch-node__label">ALU</span>
+          </div>
+          <div class="arch-arrow"><span class="arch-arrow__label">EX/MEM</span><div class="arch-arrow__line"></div></div>
+          <div class="arch-node">
+            <span class="arch-node__title">MEM</span>
+            <span class="arch-node__label">data</span>
+          </div>
+          <div class="arch-arrow"><span class="arch-arrow__label">MEM/WB</span><div class="arch-arrow__line"></div></div>
+          <div class="arch-node arch-node--visualisation">
+            <span class="arch-node__title">WB</span>
+            <span class="arch-node__label">register file</span>
+          </div>
+        </div>
+
+        <p>Every stage announces when its output register is <strong>occupied</strong> (valid) and waits for a <strong>flush</strong> from the downstream stage before accepting new work. The flush propagates upstream as backpressure: the register file flushes MEM, MEM flushes EX, EX flushes ID, and ID flushes IF.</p>
+
+        <div class="handshake" aria-hidden="true">
+          <div class="handshake__row handshake__row--valid">
+            <span class="handshake__tag">valid →</span>
+            <div class="handshake__line"></div>
+          </div>
+          <div class="handshake__stages">
+            <div class="handshake__stage">IF</div>
+            <div class="handshake__stage">ID</div>
+            <div class="handshake__stage">EX</div>
+            <div class="handshake__stage">MEM</div>
+            <div class="handshake__stage">WB</div>
+          </div>
+          <div class="handshake__row handshake__row--flush">
+            <span class="handshake__tag">← flush</span>
+            <div class="handshake__line"></div>
+          </div>
+        </div>
+
+        <ol class="dsp-pipeline">
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">1</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">IF — Instruction Fetch</span>
+              <span class="dsp-stage__desc">Owns the writable 8-slot program memory and the program counter. A <code>r_avail_instructions</code> interlock stops the PC fetching past the last loaded word; coordinates four cooperating FSMs.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">2</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">ID — Instruction Decode</span>
+              <span class="dsp-stage__desc">Slices opcode/rs1/rs2/rd/funct fields, reads operands from the register file (async ports), and maps the operation to a 5-bit internal ALU opcode.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">3</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">EX — Execute</span>
+              <span class="dsp-stage__desc">A 20-operation ALU computes the result or an effective address. Signed compares/arithmetic shifts use <code>$signed</code>; shift amounts masked to 5 bits per the RISC-V spec.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">4</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">MEM — Memory Access</span>
+              <span class="dsp-stage__desc">A five-state FSM branches on {mem_write, mem_read}: load reads, store writes, non-memory instructions hold the ALU result for write-back.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">5</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">WB — Write-Back</span>
+              <span class="dsp-stage__desc">Commits the result into the destination register. Asynchronous read ports make a written value visible to the decoder on the very next read, and the final flush closes the backpressure chain.</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- UART & Instruction Input -->
+      <div>
+        <h2>UART &amp; Instruction Input</h2>
+        <p>The <code>serial_comm</code> module is the processor's window onto the outside world — a standard 8-N-1 UART running at 16× oversampling so it can locate the centre of each bit cell. A counter divides the 50 MHz clock down to that oversampling tick:</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            serial_comm.v · oversampling divider
+          </div>
+          <pre><code><span class="tok-com">// 16x oversampling tick from the 50 MHz reference</span>
+CLK_DIV = SYS_CLK / (OVER_SAMPLING * BAUD_RATE)
+        = 50,000,000 / (16 * 9600)  <span class="tok-com">// ≈ 325</span></code></pre>
+        </div>
+
+        <p>After detecting the start-bit falling edge, the receiver re-checks at mid-start (rejecting glitches), samples eight data bits LSB-first, and pulses <code>rx_ready</code> on the stop bit:</p>
+
+        <div class="fsm" aria-hidden="true">
+          <div class="fsm__state">RX_IDLE</div>
+          <div class="fsm__arrow"><span>start = 0</span></div>
+          <div class="fsm__state">VERIFY_START</div>
+          <div class="fsm__arrow"><span>still 0</span></div>
+          <div class="fsm__state">RX_FETCHING</div>
+          <div class="fsm__arrow"><span>8 bits</span></div>
+          <div class="fsm__state">RX_COMPLETE</div>
+        </div>
+
+        <p>Instructions are entered as printable text — a string of <code>'0'</code> and <code>'1'</code> characters — so any ordinary serial terminal works with no special tooling. <code>ascii_to_bits_converter</code> shifts each accepted character MSB-first into a 32-bit accumulator (ignoring spaces, newlines, and stray bytes); after 32 valid characters it pulses <code>data_ready</code>. <code>instructionLoad</code> then commits the word to program memory and advances the write address:</p>
+
+        <div class="fsm" aria-hidden="true">
+          <div class="fsm__state">IDLE</div>
+          <div class="fsm__arrow"><span>rx edge</span></div>
+          <div class="fsm__state">RECEIVE</div>
+          <div class="fsm__arrow"><span>latch</span></div>
+          <div class="fsm__state">WRITE</div>
+          <div class="fsm__arrow"><span>addr += 1</span></div>
+          <div class="fsm__state">ADDR_INCR</div>
+        </div>
+      </div>
+
+      <!-- Instruction Set Architecture -->
+      <div>
+        <h2>Instruction Set Architecture</h2>
+        <p>All instructions are 32 bits wide. The three implemented formats differ only in how those bits are partitioned; the opcode occupies the low seven bits in every format, which lets the decoder choose a format before interpreting the rest.</p>
+
+        <div class="bitfield">
+          <div class="bitfield__label">R-type — register/register (add, sub, slt)</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:7"><span class="bitfield__bits">31:25</span><span class="bitfield__name">funct7</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">24:20</span><span class="bitfield__name">rs2</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">19:15</span><span class="bitfield__name">rs1</span></div>
+            <div class="bitfield__seg" style="flex:3"><span class="bitfield__bits">14:12</span><span class="bitfield__name">funct3</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">rd</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <div class="bitfield">
+          <div class="bitfield__label">I-type — immediate &amp; load (addi, slli, lw)</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:12"><span class="bitfield__bits">31:20</span><span class="bitfield__name">imm[11:0]</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">19:15</span><span class="bitfield__name">rs1</span></div>
+            <div class="bitfield__seg" style="flex:3"><span class="bitfield__bits">14:12</span><span class="bitfield__name">funct3</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">rd</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <div class="bitfield">
+          <div class="bitfield__label">S-type — store (sw); immediate split across two fields</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:7"><span class="bitfield__bits">31:25</span><span class="bitfield__name">imm[11:5]</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">24:20</span><span class="bitfield__name">rs2</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">19:15</span><span class="bitfield__name">rs1</span></div>
+            <div class="bitfield__seg" style="flex:3"><span class="bitfield__bits">14:12</span><span class="bitfield__name">funct3</span></div>
+            <div class="bitfield__seg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">imm[4:0]</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Opcode</th><th>Format</th><th>Class</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0110011</td><td>R-type</td><td>Register–register ALU</td></tr>
+            <tr><td>0010011</td><td>I-type</td><td>Immediate ALU / shift</td></tr>
+            <tr><td>0000011</td><td>I-type</td><td>Load</td></tr>
+            <tr><td>0100011</td><td>S-type</td><td>Store</td></tr>
+          </tbody>
+        </table>
+
+        <p>The ALU implements 20 operations selected by a 5-bit internal opcode:</p>
+        <div class="op-group">
+          <div class="op-group__label">Arithmetic</div>
+          <ul class="pill-list"><li>add</li><li>sub</li><li>addi</li></ul>
+        </div>
+        <div class="op-group">
+          <div class="op-group__label">Logic</div>
+          <ul class="pill-list"><li>and</li><li>or</li><li>xor</li><li>andi</li><li>ori</li><li>xori</li></ul>
+        </div>
+        <div class="op-group">
+          <div class="op-group__label">Shift</div>
+          <ul class="pill-list"><li>sll</li><li>srl</li><li>sra</li><li>slli</li><li>srli</li><li>srai</li></ul>
+        </div>
+        <div class="op-group">
+          <div class="op-group__label">Compare</div>
+          <ul class="pill-list"><li>slt</li><li>sltu</li><li>slti</li><li>sltiu</li></ul>
+        </div>
+        <div class="op-group">
+          <div class="op-group__label">Store pass-through</div>
+          <ul class="pill-list"><li>sw</li></ul>
+        </div>
+      </div>
+
+      <!-- VGA Visualisation -->
+      <div>
+        <h2>VGA Visualisation</h2>
+        <p>A defining goal was to make the processor's internal state <em>visible</em>. The VGA subsystem renders the register file onto an ordinary monitor so an observer can watch register values change as instructions execute. VGA is a raster-scan standard: two sync pulses coordinate the monitor — horizontal sync (<code>VGA_HS</code>) ends each scan line and vertical sync (<code>VGA_VS</code>) ends each frame — while between them the design drives the colour channels. The DE10-Lite gives 4 bits each of red, green and blue, a 12-bit colour space.</p>
+
+        <div class="vga-scanline" aria-hidden="true">
+          <div class="vga-active">active video (RGB driven)</div>
+          <div class="vga-fp">FP</div>
+          <div class="vga-sync">HSYNC</div>
+          <div class="vga-bp">BP</div>
+        </div>
+
+        <p>The display pipeline pairs a pixel-coordinate generator — driven by the same horizontal/vertical counters that produce the sync pulses — with a colour generator that maps the current beam position to a register and bit and lights each cell according to whether that bit is 0 or 1. In the captured synthesised revision, a slice of register/stage state is also surfaced on the on-board LEDs (<code>LEDR</code>) as a lighter-weight readout — each write-back updates the visible value, which served as the primary debug view during bring-up.</p>
+      </div>
+
+      <!-- Verification & worked example -->
+      <div>
+        <h2>Verification &amp; Worked Example</h2>
+        <p>The design was validated in Verilog simulation (Questa/ModelSim) before deployment. One testbench exercises the instruction-input subsystem in isolation; another wires all six core modules exactly as the top level and drives R-, I-, load- and store-type instructions straight into the loader — bypassing the UART so tests run quickly and deterministically.</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            top_level_tb.v · applying one R-type instruction
+          </div>
+          <pre><code><span class="tok-com">// add x4, x2, x2  (funct7=0, rs2=2, rs1=2, funct3=0, rd=4, opcode=0110011)</span>
+r_instruction = <span class="tok-str">32'b0000000_00010_00010_000_00100_0110011</span>;
+r_data_sent   = <span class="tok-str">1'b1</span>;
+#10;
+r_data_sent   = <span class="tok-str">1'b0</span>;
+#100;  <span class="tok-com">// let the instruction propagate through IF..WB</span></code></pre>
+        </div>
+
+        <p>With the register-file seed values (<code>x2 = 3</code>), the expected result of <code>add x4, x2, x2</code> is <code>x4 = 6</code>. Each stage raises its valid signal as it completes, and the write-back triggers the backward flush chain:</p>
+
+        <ol class="seq">
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">IF — Fetch</span>
+              <p class="seq__text">Fetch <code>add x4, x2, x2</code> from program memory; raise <code>o_data_ready</code>.</p>
+            </div>
+          </li>
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">ID — Decode</span>
+              <p class="seq__text">Read <code>x2 = 3</code> twice, map to <code>ALUop = ADD</code>; raise <code>dec_ins_ready</code>.</p>
+            </div>
+          </li>
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">EX — Execute</span>
+              <p class="seq__text">Compute <code>3 + 3 = 6</code> in the ALU; raise <code>alu_ready</code>.</p>
+            </div>
+          </li>
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">MEM — Memory</span>
+              <p class="seq__text">No memory op (HOLD) — forward the result <code>6</code> unchanged; raise <code>data_ready</code>.</p>
+            </div>
+          </li>
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">WB — Write-Back</span>
+              <p class="seq__text">Write <code>x4 ← 6</code> and raise <code>o_flush</code>, releasing the upstream pipeline registers.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Results, challenges & future work -->
+      <div>
+        <h2>Results, Challenges &amp; Future Work</h2>
+        <p>The project achieved its central goal: a user can send a machine-code instruction over UART, have it processed by the RISC-V core, and observe the resulting architectural state. The handshake-based control model proved robust against the variable-latency serial front end — its primary purpose.</p>
+
+        <div class="future-grid">
+          <div class="future-card">
+            <h3>Results</h3>
+            <ul>
+              <li>ASCII instruction text received over 9600-baud UART and reassembled into 32-bit words</li>
+              <li>Words loaded, fetched, decoded, executed and written back through the five-stage pipeline</li>
+              <li>Register state surfaced on the board outputs for real-time observation</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Challenges</h3>
+            <ul>
+              <li>UART ↔ core clock-domain sync — solved with two-flop edge detection (pattern <code>2'b01</code>)</li>
+              <li>Reset-polarity mismatch between front-end and core modules</li>
+              <li>Flush progression — multi-instruction runs can need a manual <code>SW[0]</code> step</li>
+              <li>VGA synthesis lengthened Quartus compile times</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Future Work</h3>
+            <ul>
+              <li>Branch (B-type) and jump (J-type) support with PC redirection</li>
+              <li>Full 32-register file and larger instruction/data memories</li>
+              <li>Byte- and half-word load/store end-to-end</li>
+              <li>Host-side assembler; data-forwarding and hazard detection</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="project-links">
-        <a href="#" class="btn">View on GitHub</a>
-        <a href="#" class="btn btn--ghost">Live Demo</a>
+        <a href="https://github.com/salwan-aldhahab/De10-32-bit-RISC-V-Processor-with-UART-and-VGA" class="btn" target="_blank" rel="noopener noreferrer">View on GitHub</a>
       </div>
+
     </div>
   </div>
 
