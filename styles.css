@@ -274,8 +274,106 @@ main {
 
 .card-grid {
   display: grid;
-  gap: 16px; /* adds space between project cards */
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* ── Project card enhancements ── */
+.card--project {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card--project:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  border-color: rgba(78, 205, 196, 0.25);
+}
+
+.card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card__num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.card__tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+/* ── Project detail page ── */
+.page-header {
+  padding: 32px clamp(16px, 4vw, 56px) 24px;
+  background: linear-gradient(135deg, rgba(15, 28, 63, 0.95), rgba(11, 19, 43, 0.9));
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.project-page {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 48px clamp(16px, 4vw, 56px) 80px;
+  display: grid;
+  gap: 32px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.15s ease;
+  margin-bottom: 12px;
+}
+
+.back-link:hover {
+  color: var(--accent-2);
+}
+
+.project-hero {
+  display: grid;
+  gap: 12px;
+}
+
+.project-hero h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.project-body {
+  display: grid;
+  gap: 24px;
+}
+
+.project-body h2 {
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+
+.project-body p {
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.project-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 8px;
 }
 
 @media (max-width: 640px) {
