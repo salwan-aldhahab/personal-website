@@ -556,6 +556,269 @@ main {
   font-family: "Courier New", Courier, monospace;
 }
 
+/* ── Animated ECG hero trace ── */
+.ecg-trace {
+  background: linear-gradient(180deg, rgba(8, 14, 30, 0.9), rgba(11, 19, 43, 0.7));
+  border: 1px solid rgba(78, 205, 196, 0.16);
+  border-radius: var(--radius);
+  margin: 18px 0 4px;
+  padding: 6px 0;
+  overflow: hidden;
+}
+
+.ecg-trace svg {
+  display: block;
+  width: 100%;
+  height: 110px;
+}
+
+.ecg-trace__path {
+  fill: none;
+  stroke: var(--accent-2);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(78, 205, 196, 0.55));
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: ecg-draw 4s linear infinite;
+}
+
+@keyframes ecg-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ecg-trace__path { animation: none; stroke-dashoffset: 0; }
+}
+
+/* ── Metric strip ── */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.metric {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metric__value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  line-height: 1.1;
+}
+
+.metric__label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+}
+
+/* ── Code blocks ── */
+.code-block {
+  background: #0a1124;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.code-block__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: "Courier New", Courier, monospace;
+}
+
+.code-block__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #d6def5;
+}
+
+.code-block code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.tok-com { color: #6b7a99; font-style: italic; }
+.tok-str { color: #e0a86b; }
+.tok-kw  { color: #4ecdc4; }
+.tok-fn  { color: #f7b267; }
+
+/* ── Wiring schematic (SVG) ── */
+.wiring {
+  background: linear-gradient(180deg, rgba(8, 14, 30, 0.6), rgba(11, 19, 43, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  margin-top: 14px;
+  padding: 10px;
+}
+
+.wiring svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wiring__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 8px 6px 2px;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.wiring__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wiring__swatch {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── Sequence / data-flow diagram ── */
+.seq {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  counter-reset: seq;
+}
+
+.seq__step {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 14px;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.seq__step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 28px;
+  bottom: -4px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.seq__marker {
+  counter-increment: seq;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 2px solid var(--accent-2);
+  color: var(--accent-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.seq__marker::before { content: counter(seq); }
+
+.seq__body { padding-top: 3px; }
+
+.seq__actor {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.seq__text {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-top: 1px;
+}
+
+/* ── Future-work grid ── */
+.future-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.future-card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.future-card h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.future-card h3::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.future-card ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
+.future-card li {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
 @media (max-width: 640px) {
   .nav {
     flex-wrap: wrap;

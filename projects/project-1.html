@@ -46,6 +46,13 @@
       </ul>
     </div>
 
+    <!-- Animated ECG hero trace -->
+    <div class="ecg-trace" aria-hidden="true">
+      <svg viewBox="0 0 1000 100" preserveAspectRatio="none">
+        <path class="ecg-trace__path" d="M0,55 L20,55 Q30,42 40,55 L60,55 L66,60 L72,12 L78,72 L84,55 L105,55 Q120,40 135,55 L200,55 L220,55 Q230,42 240,55 L260,55 L266,60 L272,12 L278,72 L284,55 L305,55 Q320,40 335,55 L400,55 L420,55 Q430,42 440,55 L460,55 L466,60 L472,12 L478,72 L484,55 L505,55 Q520,40 535,55 L600,55 L620,55 Q630,42 640,55 L660,55 L666,60 L672,12 L678,72 L684,55 L705,55 Q720,40 735,55 L800,55 L820,55 Q830,42 840,55 L860,55 L866,60 L872,12 L878,72 L884,55 L905,55 Q920,40 935,55 L1000,55" />
+      </svg>
+    </div>
+
     <div class="section project-body">
 
       <!-- System Overview -->
@@ -73,6 +80,29 @@
           <div class="arch-node arch-node--visualisation">
             <span class="arch-node__title">Browser Dashboard</span>
             <span class="arch-node__label">Visualisation</span>
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric">
+            <span class="metric__value">250 Hz</span>
+            <span class="metric__label">Sample rate</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">12-bit</span>
+            <span class="metric__label">ADC resolution</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">8</span>
+            <span class="metric__label">DSP stages</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">~1 s</span>
+            <span class="metric__label">Batch latency</span>
+          </div>
+          <div class="metric">
+            <span class="metric__value">1000</span>
+            <span class="metric__label">Sample buffer</span>
           </div>
         </div>
 
@@ -107,20 +137,84 @@
       <!-- Hardware & Firmware -->
       <div>
         <h2>Hardware &amp; Firmware</h2>
-        <p>Three electrodes (RA, LA, RL reference) feed the AD8232 analog front-end, which amplifies, common-mode-rejects, and band-passes the ECG signal into the ESP32's input range. The AD8232 output drives <code>GPIO36</code> (ADC1_CH0 — the input-only VP pin), sampled at 12-bit resolution. The firmware collects 250 samples at 4 ms intervals (~250 Hz), serialises them as <code>{"ecg":[…]}</code>, and sends the JSON over a persistent WebSocket. If the connection drops, the device reconnects transparently before the next batch.</p>
+        <p>Three electrodes (RA, LA, RL reference) feed the AD8232 analog front-end, which amplifies, common-mode-rejects, and band-passes the ECG signal into the ESP32's input range. The AD8232 output drives <code>GPIO36</code> (ADC1_CH0 — the input-only VP pin), sampled at 12-bit resolution. Wiring is deliberately minimal: only three wires reach the ESP32, since the firmware reads a single analog pin.</p>
 
-        <table class="spec-table">
-          <thead>
-            <tr><th>Parameter</th><th>Value</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>ADC pin</td><td>GPIO36 (ADC1_CH0, input-only VP)</td></tr>
-            <tr><td>ADC resolution</td><td>12-bit · codes 0–4095</td></tr>
-            <tr><td>Sampling rate</td><td>≈ 250 Hz (SAMPLE_DELAY_MS = 4)</td></tr>
-            <tr><td>Batch size</td><td>250 samples · ≈ 1 s per transmission</td></tr>
-            <tr><td>WebSocket endpoint</td><td>ws://&lt;server&gt;:8000/ws/ecg/</td></tr>
-          </tbody>
-        </table>
+        <div class="wiring">
+          <svg viewBox="0 0 720 230" role="img" aria-label="Wiring schematic from electrodes through the AD8232 to the ESP32">
+            <!-- electrodes -->
+            <text x="32" y="32" fill="#6b7a99" font-size="11" text-anchor="middle" font-family="monospace">electrodes</text>
+            <circle cx="32" cy="90"  r="7" fill="#f25c54"/>
+            <circle cx="32" cy="135" r="7" fill="#4d8bf2"/>
+            <circle cx="32" cy="180" r="7" fill="#9aa3b5"/>
+            <text x="50" y="94"  fill="#94a2c4" font-size="11" font-family="monospace">RA</text>
+            <text x="50" y="139" fill="#94a2c4" font-size="11" font-family="monospace">LA</text>
+            <text x="50" y="184" fill="#94a2c4" font-size="11" font-family="monospace">RL</text>
+
+            <!-- electrode wires -->
+            <path d="M39,90  H130" stroke="#f25c54" stroke-width="2.5" fill="none"/>
+            <path d="M39,135 H130" stroke="#4d8bf2" stroke-width="2.5" fill="none"/>
+            <path d="M39,180 H130" stroke="#9aa3b5" stroke-width="2.5" fill="none"/>
+
+            <!-- AD8232 chip -->
+            <rect x="130" y="55" width="160" height="150" rx="8" fill="#111a35" stroke="rgba(255,255,255,0.2)"/>
+            <text x="210" y="80" fill="#e6e9f0" font-size="14" font-weight="600" text-anchor="middle" font-family="monospace">AD8232</text>
+            <text x="210" y="98" fill="#6b7a99" font-size="9"  text-anchor="middle" font-family="monospace">analog front-end</text>
+            <text x="140" y="139" fill="#94a2c4" font-size="10" font-family="monospace">RA/LA/RL</text>
+            <text x="280" y="94"  fill="#4ecdc4" font-size="10" text-anchor="end" font-family="monospace">OUTPUT</text>
+            <text x="280" y="139" fill="#f25c54" font-size="10" text-anchor="end" font-family="monospace">3.3V</text>
+            <text x="280" y="184" fill="#9aa3b5" font-size="10" text-anchor="end" font-family="monospace">GND</text>
+
+            <!-- AD8232 -> ESP32 wires -->
+            <path d="M290,90  H470" stroke="#4ecdc4" stroke-width="2.5" fill="none"/>
+            <path d="M290,135 H470" stroke="#f25c54" stroke-width="2.5" fill="none"/>
+            <path d="M290,180 H470" stroke="#9aa3b5" stroke-width="2.5" fill="none"/>
+            <text x="380" y="82"  fill="#6b7a99" font-size="9" text-anchor="middle" font-family="monospace">analog ECG</text>
+
+            <!-- ESP32 chip -->
+            <rect x="470" y="55" width="160" height="150" rx="8" fill="#111a35" stroke="rgba(255,255,255,0.2)"/>
+            <text x="550" y="86" fill="#e6e9f0" font-size="14" font-weight="600" text-anchor="middle" font-family="monospace">ESP32</text>
+            <text x="480" y="94"  fill="#4ecdc4" font-size="10" font-family="monospace">GPIO36</text>
+            <text x="480" y="139" fill="#f25c54" font-size="10" font-family="monospace">3V3</text>
+            <text x="480" y="184" fill="#9aa3b5" font-size="10" font-family="monospace">GND</text>
+            <text x="550" y="170" fill="#6b7a99" font-size="9" text-anchor="middle" font-family="monospace">ADC1_CH0 · 0–4095</text>
+
+            <!-- junction dots -->
+            <circle cx="130" cy="90" r="3" fill="#f25c54"/>
+            <circle cx="290" cy="90" r="3" fill="#4ecdc4"/>
+            <circle cx="470" cy="90" r="3" fill="#4ecdc4"/>
+          </svg>
+          <div class="wiring__legend">
+            <span><span class="wiring__swatch" style="background:#4ecdc4"></span>Analog ECG → GPIO36</span>
+            <span><span class="wiring__swatch" style="background:#f25c54"></span>3.3 V power</span>
+            <span><span class="wiring__swatch" style="background:#9aa3b5"></span>Ground</span>
+          </div>
+        </div>
+
+        <p>The firmware collects 250 samples at 4 ms intervals (~250 Hz), serialises them as <code>{"ecg":[…]}</code>, and sends the JSON over a persistent WebSocket. If the connection drops, it reconnects transparently before the next batch.</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            websocket_ecg_send_data.ino · ESP32 / C++
+          </div>
+          <pre><code><span class="tok-kw">#define</span> ECG_PIN 36
+<span class="tok-kw">#define</span> SAMPLE_COUNT 250
+<span class="tok-kw">#define</span> SAMPLE_DELAY_MS 4        <span class="tok-com">// ~250 Hz sampling rate</span>
+
+<span class="tok-kw">void</span> <span class="tok-fn">loop</span>() {
+  <span class="tok-kw">if</span> (!client.available()) {     <span class="tok-com">// auto-reconnect if dropped</span>
+    connectToWebSocket();
+    <span class="tok-kw">return</span>;
+  }
+  <span class="tok-kw">int</span> ecg[SAMPLE_COUNT];
+  <span class="tok-kw">for</span> (<span class="tok-kw">int</span> i = 0; i &lt; SAMPLE_COUNT; i++) {
+    ecg[i] = <span class="tok-fn">analogRead</span>(ECG_PIN);   <span class="tok-com">// 12-bit: 0..4095</span>
+    <span class="tok-fn">delay</span>(SAMPLE_DELAY_MS);
+  }
+  client.send(serialize(ecg));    <span class="tok-com">// -> {"ecg":[...]}</span>
+  client.poll();
+}</code></pre>
+        </div>
 
         <div class="project-gallery">
           <img src="../images/ecg/device-worn.jpg" alt="Red 3D-printed enclosure worn on torso with electrode leads routed to chest positions">
@@ -204,19 +298,147 @@
       <!-- Backend -->
       <div>
         <h2>Backend — Django + Channels</h2>
-        <p>Standard Django's request/response cycle cannot hold a long-lived bidirectional connection open, so the project runs on the ASGI stack: Django Channels adds WebSocket support and Daphne serves the application. Both the ESP32 device and every dashboard browser connect to the same <code>ws/ecg/</code> endpoint and are placed into a single Channels group (<code>ecg_group</code>), enabling one producer to fan out to many viewers simultaneously.</p>
-        <p>The <code>ECGConsumer</code> lifecycle: <code>connect()</code> joins the group → <code>receive()</code> parses the raw batch and calls <code>filter_ecg_signal()</code> → <code>group_send</code> dispatches the cleaned array to all group members → <code>send_ecg()</code> serialises and pushes <code>{"filtered":[…]}</code> to each socket. The in-memory channel layer is used for development; a Redis layer is required for multi-process deployment.</p>
+        <p>Standard Django's request/response cycle cannot hold a long-lived bidirectional connection open, so the project runs on the ASGI stack: Django Channels adds WebSocket support and Daphne serves the application. Both the ESP32 device and every dashboard browser connect to the same <code>ws/ecg/</code> endpoint and are placed into a single Channels group (<code>ecg_group</code>), letting one producer fan out to many viewers. The in-memory channel layer is used for development; a Redis layer is required for multi-process deployment.</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            ecg/consumers.py · Python / Channels
+          </div>
+          <pre><code><span class="tok-kw">class</span> <span class="tok-fn">ECGConsumer</span>(AsyncWebsocketConsumer):
+    <span class="tok-kw">async def</span> <span class="tok-fn">receive</span>(self, text_data):
+        raw = json.loads(text_data).get(<span class="tok-str">"ecg"</span>, [])
+        filtered = <span class="tok-fn">filter_ecg_signal</span>(raw)        <span class="tok-com"># 8-stage DSP</span>
+        <span class="tok-kw">await</span> self.channel_layer.group_send(
+            <span class="tok-str">"ecg_group"</span>,
+            {<span class="tok-str">"type"</span>: <span class="tok-str">"send_ecg"</span>, <span class="tok-str">"data"</span>: filtered},
+        )
+
+    <span class="tok-kw">async def</span> <span class="tok-fn">send_ecg</span>(self, event):
+        <span class="tok-kw">await</span> self.send(json.dumps({<span class="tok-str">"filtered"</span>: event[<span class="tok-str">"data"</span>]}))</code></pre>
+        </div>
       </div>
 
       <!-- Frontend -->
       <div>
         <h2>Frontend Dashboard</h2>
-        <p>A single-page Chart.js 4.4.1 dashboard keeps a rolling 1000-sample buffer (~4 s at 250 Hz). Each incoming batch is appended to the right while the oldest samples drop off the left, producing the scrolling-trace effect of a bedside monitor. The y-axis is pinned to 0–4095 so the waveform scale stays stable regardless of signal amplitude, and chart animation is disabled for instantaneous per-batch redraws. Because every browser tab subscribes to the same <code>ecg_group</code>, opening the dashboard on multiple machines shows the same live trace across all of them — making the monitor genuinely remote.</p>
+        <p>A single-page Chart.js 4.4.1 dashboard keeps a rolling 1000-sample buffer (~4 s at 250 Hz). Each incoming batch is appended to the right while the oldest samples drop off the left, producing the scrolling-trace effect of a bedside monitor. The y-axis is pinned to 0–4095 so the waveform scale stays stable, and animation is disabled for instantaneous redraws. Because every tab subscribes to the same <code>ecg_group</code>, the live trace appears identically on every machine that can reach the server — making the monitor genuinely remote.</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            ecg/templates/ecg.html · JavaScript
+          </div>
+          <pre><code><span class="tok-kw">const</span> BUFFER_SIZE = 1000;
+<span class="tok-kw">let</span> ecgBuffer = Array(BUFFER_SIZE).fill(0);
+<span class="tok-kw">const</span> ws = <span class="tok-kw">new</span> WebSocket(<span class="tok-str">`ws://${location.host}/ws/ecg/`</span>);
+
+ws.onmessage = (event) => {
+  <span class="tok-kw">const</span> { filtered } = JSON.parse(event.data);
+  <span class="tok-com">// drop oldest, append newest -> scrolling trace</span>
+  ecgBuffer = ecgBuffer.slice(filtered.length).concat(filtered);
+  ecgChart.data.datasets[0].data = ecgBuffer;
+  ecgChart.update();
+};</code></pre>
+        </div>
+      </div>
+
+      <!-- End-to-end data flow -->
+      <div>
+        <h2>End-to-End Data Flow</h2>
+        <p>The journey of a single batch from the patient's chest to the clinician's screen:</p>
+
+        <ol class="seq">
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">ESP32 + AD8232</span>
+              <p class="seq__text">Samples the AD8232 output 250× at 4 ms intervals — about one second of signal per batch.</p>
+            </div>
+          </li>
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">ESP32 → Server</span>
+              <p class="seq__text">Serialises <code>{"ecg":[250]}</code> and sends it over the Wi-Fi WebSocket to <code>ws://&lt;server&gt;:8000/ws/ecg/</code>.</p>
+            </div>
+          </li>
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">ECGConsumer.receive()</span>
+              <p class="seq__text">Parses the batch and runs <code>filter_ecg_signal()</code> — the 8-stage DSP pipeline.</p>
+            </div>
+          </li>
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">group_send → ecg_group</span>
+              <p class="seq__text">The cleaned array fans out to every socket in the group via <code>send_ecg()</code>.</p>
+            </div>
+          </li>
+          <li class="seq__step">
+            <span class="seq__marker"></span>
+            <div class="seq__body">
+              <span class="seq__actor">Browser Dashboard</span>
+              <p class="seq__text">Each client appends <code>{"filtered":[250]}</code> to its rolling buffer and redraws the Chart.js trace.</p>
+            </div>
+          </li>
+        </ol>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Direction</th><th>Shape</th><th>Payload</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ESP32 → server</td><td><code>{"ecg":[…]}</code></td><td>250 raw ADC ints (0–4095)</td></tr>
+            <tr><td>server → browser</td><td><code>{"filtered":[…]}</code></td><td>250 cleaned ADC ints (0–4095)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Limitations & future work -->
+      <div>
+        <h2>Limitations &amp; Future Work</h2>
+        <p>The build is a working proof of concept covering the full acquisition → processing → visualisation loop. Hardening it toward production would mean:</p>
+
+        <div class="future-grid">
+          <div class="future-card">
+            <h3>Security</h3>
+            <ul>
+              <li>Move hard-coded Wi-Fi / server credentials to an un-committed secrets store</li>
+              <li>Set <code>DEBUG = False</code>, restrict <code>ALLOWED_HOSTS</code>, load <code>SECRET_KEY</code> from env</li>
+              <li>Add authentication and TLS (<code>wss://</code> / HTTPS) — ECG is sensitive data</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Scalability</h3>
+            <ul>
+              <li>Swap the in-memory channel layer for Redis to run multiple workers</li>
+              <li>Per-patient groups (<code>ecg_&lt;id&gt;</code>) instead of one shared stream</li>
+              <li>Smaller batches to cut the ~1 s fill latency</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Data &amp; Clinical</h3>
+            <ul>
+              <li>Persist sessions for playback, export and offline review</li>
+              <li>Heart-rate, R-R interval and arrhythmia detection on existing R-peaks</li>
+              <li>Multi-lead acquisition for broader diagnostic value</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Hardware</h3>
+            <ul>
+              <li>Battery management, charging and low-power sleep between batches</li>
+              <li>Published CAD / STL files for a reproducible enclosure</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="project-links">
-        <a href="#" class="btn">View on GitHub</a>
-        <a href="#" class="btn btn--ghost">Live Demo</a>
+        <a href="https://github.com/salwan-aldhahab/HolterMonitor" class="btn" target="_blank" rel="noopener noreferrer">View on GitHub</a>
       </div>
 
     </div>
