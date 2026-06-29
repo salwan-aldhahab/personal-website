@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project One — Salwan Aldhahab</title>
+  <title>ECG Holter Monitor — Salwan Aldhahab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
         <img src="../images/profile.jpg" alt="Salwan Aldhahab headshot">
         <div class="logo__text">
           <span class="logo__name">Salwan Aldhahab</span>
-          <span class="logo__subtitle">Hardware & Software Engineer</span>
+          <span class="logo__subtitle">Hardware &amp; Software Engineer</span>
         </div>
       </div>
       <nav class="nav">
@@ -30,38 +30,195 @@
   </header>
 
   <div class="project-page">
+
     <div class="project-hero">
       <a href="../index.html#projects" class="back-link">← Back to projects</a>
-      <p class="eyebrow">Project 01 · Category</p>
-      <h1>Project One</h1>
-      <p class="lede">A concise one-liner describing what this project does and why it matters.</p>
+      <p class="eyebrow">Project 01 · Embedded Systems</p>
+      <h1>Wearable ECG Holter Monitor</h1>
+      <p class="lede">Wearable single-lead ECG acquisition node streaming real-time heart waveforms over Wi-Fi to a Django/Channels backend, cleaned by an 8-stage DSP pipeline, and rendered live in a browser dashboard.</p>
       <ul class="pill-list">
-        <li>Tool A</li>
-        <li>Tool B</li>
-        <li>Tool C</li>
+        <li>ESP32 (C++)</li>
+        <li>AD8232</li>
+        <li>Python / Django</li>
+        <li>Django Channels</li>
+        <li>SciPy / PyWavelets</li>
+        <li>Chart.js</li>
       </ul>
     </div>
 
     <div class="section project-body">
+
+      <!-- System Overview -->
       <div>
-        <h2>Overview</h2>
-        <p>Describe the project at a high level. What is it, what does it do, and why did you build it? Give the reader enough context to understand the rest of the page.</p>
+        <h2>System Overview</h2>
+        <p>A patient wears an ESP32 + AD8232 node on their torso. The device continuously digitises the single-lead ECG at 250 Hz and streams 250-sample batches over Wi-Fi to a Django/Channels server, which runs an 8-stage DSP filter and fans the cleaned waveform out to every connected browser in real time.</p>
+
+        <div class="arch-diagram">
+          <div class="arch-node arch-node--acquisition">
+            <span class="arch-node__title">ESP32 + AD8232</span>
+            <span class="arch-node__label">Acquisition</span>
+          </div>
+          <div class="arch-arrow">
+            <span class="arch-arrow__label">Wi-Fi WebSocket<br>{"ecg":[…]}</span>
+            <div class="arch-arrow__line"></div>
+          </div>
+          <div class="arch-node">
+            <span class="arch-node__title">Django + Channels</span>
+            <span class="arch-node__label">Processing</span>
+          </div>
+          <div class="arch-arrow">
+            <span class="arch-arrow__label">WebSocket<br>{"filtered":[…]}</span>
+            <div class="arch-arrow__line"></div>
+          </div>
+          <div class="arch-node arch-node--visualisation">
+            <span class="arch-node__title">Browser Dashboard</span>
+            <span class="arch-node__label">Visualisation</span>
+          </div>
+        </div>
+
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Technology</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Acquisition</td>
+              <td>ESP32 · AD8232 · ArduinoWebsockets · ArduinoJson</td>
+              <td>Digitise ECG, batch &amp; transmit over Wi-Fi</td>
+            </tr>
+            <tr>
+              <td>Processing</td>
+              <td>Django 5 · Channels · Daphne · NumPy · SciPy · PyWavelets</td>
+              <td>Receive, filter, and broadcast each batch</td>
+            </tr>
+            <tr>
+              <td>Visualisation</td>
+              <td>Chart.js 4.4.1 · HTML5 / JavaScript</td>
+              <td>Rolling-buffer live waveform in the browser</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
+      <!-- Hardware & Firmware -->
       <div>
-        <h2>What I built</h2>
-        <p>Go into more detail about the system or feature you designed. What were the key technical decisions? What constraints did you work within?</p>
+        <h2>Hardware &amp; Firmware</h2>
+        <p>Three electrodes (RA, LA, RL reference) feed the AD8232 analog front-end, which amplifies, common-mode-rejects, and band-passes the ECG signal into the ESP32's input range. The AD8232 output drives <code>GPIO36</code> (ADC1_CH0 — the input-only VP pin), sampled at 12-bit resolution. The firmware collects 250 samples at 4 ms intervals (~250 Hz), serialises them as <code>{"ecg":[…]}</code>, and sends the JSON over a persistent WebSocket. If the connection drops, the device reconnects transparently before the next batch.</p>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Parameter</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ADC pin</td><td>GPIO36 (ADC1_CH0, input-only VP)</td></tr>
+            <tr><td>ADC resolution</td><td>12-bit · codes 0–4095</td></tr>
+            <tr><td>Sampling rate</td><td>≈ 250 Hz (SAMPLE_DELAY_MS = 4)</td></tr>
+            <tr><td>Batch size</td><td>250 samples · ≈ 1 s per transmission</td></tr>
+            <tr><td>WebSocket endpoint</td><td>ws://&lt;server&gt;:8000/ws/ecg/</td></tr>
+          </tbody>
+        </table>
+
+        <div class="project-gallery">
+          <img src="../images/ecg/device-worn.jpg" alt="Red 3D-printed enclosure worn on torso with electrode leads routed to chest positions">
+          <img src="../images/ecg/esp32-board.jpg" alt="ESP32 development board held above components with wiring visible">
+          <img src="../images/ecg/electrodes.jpg" alt="Snap ECG electrode pads laid out on a table with colour-coded leads">
+        </div>
       </div>
 
+      <!-- DSP Pipeline -->
       <div>
-        <h2>Challenges & learnings</h2>
-        <p>Describe any interesting problems you ran into and how you solved them. This is where you show depth — tradeoffs, debugging, and what you would do differently next time.</p>
+        <h2>Signal Processing Pipeline</h2>
+        <p>Every incoming batch passes through <code>filter_ecg_signal()</code> in <code>ecg/filters.py</code> on the server before being broadcast. The pipeline is built on NumPy, SciPy (<code>butter</code>, <code>sosfiltfilt</code>, <code>iirnotch</code>, <code>savgol_filter</code>, <code>welch</code>), and PyWavelets. Any stage that errors out fails gracefully so a single bad batch never breaks the live stream.</p>
+
+        <ol class="dsp-pipeline">
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">0</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Outlier Clipping</span>
+              <span class="dsp-stage__desc">Robust clip to median ± 5 MAD — removes gross spikes without being skewed by extreme values</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">1</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Baseline Wander Removal</span>
+              <span class="dsp-stage__desc">Segmented polynomial detrend (long batches) + 0.5 Hz Butterworth high-pass, zero-phase SOS</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">2</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Three-Band Filtering</span>
+              <span class="dsp-stage__desc">Wide 0.5–45 Hz · QRS 8–20 Hz · P/T 0.5–10 Hz — separate Butterworth band-passes per ECG feature</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">3</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Adaptive QRS Weighting</span>
+              <span class="dsp-stage__desc">Sliding energy mask recombines bands: 0.3 × wide + 0.5 × QRS × mask + 0.2 × P/T × (1 − mask)</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">4</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Powerline Removal</span>
+              <span class="dsp-stage__desc">Auto-detects 50/60 Hz via Welch PSD; cascaded iirnotch filters on fundamentals and 2nd/3rd harmonics</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">5</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Wavelet Denoising</span>
+              <span class="dsp-stage__desc">sym6 decomposition with level-dependent soft thresholding — suppresses broadband noise, preserves ECG morphology</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">6</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Adaptive Smoothing</span>
+              <span class="dsp-stage__desc">SNR-based: noisy → Savitzky–Golay (~40 ms); moderate → 35 Hz low-pass; clean → pass-through</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">7</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">R-Peak-Preserving Outlier Replace</span>
+              <span class="dsp-stage__desc">Rolling median/MAD replaces residual outliers; detected R-peak regions are explicitly protected from flattening</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">8</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Re-centre &amp; Clip</span>
+              <span class="dsp-stage__desc">Centre on 2048 (ADC midpoint), clip to integer range 0–4095 — matches the dashboard's fixed y-axis</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Backend -->
+      <div>
+        <h2>Backend — Django + Channels</h2>
+        <p>Standard Django's request/response cycle cannot hold a long-lived bidirectional connection open, so the project runs on the ASGI stack: Django Channels adds WebSocket support and Daphne serves the application. Both the ESP32 device and every dashboard browser connect to the same <code>ws/ecg/</code> endpoint and are placed into a single Channels group (<code>ecg_group</code>), enabling one producer to fan out to many viewers simultaneously.</p>
+        <p>The <code>ECGConsumer</code> lifecycle: <code>connect()</code> joins the group → <code>receive()</code> parses the raw batch and calls <code>filter_ecg_signal()</code> → <code>group_send</code> dispatches the cleaned array to all group members → <code>send_ecg()</code> serialises and pushes <code>{"filtered":[…]}</code> to each socket. The in-memory channel layer is used for development; a Redis layer is required for multi-process deployment.</p>
+      </div>
+
+      <!-- Frontend -->
+      <div>
+        <h2>Frontend Dashboard</h2>
+        <p>A single-page Chart.js 4.4.1 dashboard keeps a rolling 1000-sample buffer (~4 s at 250 Hz). Each incoming batch is appended to the right while the oldest samples drop off the left, producing the scrolling-trace effect of a bedside monitor. The y-axis is pinned to 0–4095 so the waveform scale stays stable regardless of signal amplitude, and chart animation is disabled for instantaneous per-batch redraws. Because every browser tab subscribes to the same <code>ecg_group</code>, opening the dashboard on multiple machines shows the same live trace across all of them — making the monitor genuinely remote.</p>
       </div>
 
       <div class="project-links">
         <a href="#" class="btn">View on GitHub</a>
         <a href="#" class="btn btn--ghost">Live Demo</a>
       </div>
+
     </div>
   </div>
 
