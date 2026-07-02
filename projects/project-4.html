@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Four — Salwan Aldhahab</title>
+  <title>32-bit ALU — RTL to GDSII — Salwan Aldhahab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
         <img src="../images/profile.jpg" alt="Salwan Aldhahab headshot">
         <div class="logo__text">
           <span class="logo__name">Salwan Aldhahab</span>
-          <span class="logo__subtitle">Hardware & Software Engineer</span>
+          <span class="logo__subtitle">Hardware &amp; Software Engineer</span>
         </div>
       </div>
       <nav class="nav">
@@ -30,38 +30,527 @@
   </header>
 
   <div class="project-page">
+
     <div class="project-hero">
       <a href="../index.html#projects" class="back-link">← Back to projects</a>
-      <p class="eyebrow">Project 04 · Category</p>
-      <h1>Project Four</h1>
-      <p class="lede">A concise one-liner describing what this project does and why it matters.</p>
+      <p class="eyebrow">Project 04 · Digital VLSI / ASIC</p>
+      <h1>32-bit ALU — RTL to GDSII</h1>
+      <p class="lede">A complete Cadence ASIC implementation of a 32-bit Arithmetic-Logic Unit on the GPDK045 45 nm CMOS process — from Verilog RTL through simulation, synthesis, place-and-route, physical signoff and GDSII export, to full-chip pad-frame integration. Built on a bit-slice architecture: one verified 1-bit slice tiled 32 times through a ripple carry.</p>
       <ul class="pill-list">
-        <li>Tool A</li>
-        <li>Tool B</li>
-        <li>Tool C</li>
+        <li>Verilog</li>
+        <li>Cadence RTL-to-GDS</li>
+        <li>GPDK045 45 nm</li>
+        <li>Genus</li>
+        <li>Innovus</li>
+        <li>Virtuoso</li>
       </ul>
+      <p class="eyebrow">EECS 4612 · Digital VLSI · Lassonde School of Engineering, York University</p>
+    </div>
+
+    <!-- Animated RTL-to-GDS flow hero -->
+    <div class="pipeline-hero" aria-hidden="true">
+      <div class="pipeline-hero__stage">RTL<span>Verilog</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">Synthesis<span>Genus</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">P&amp;R<span>Innovus</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">Signoff<span>DRC · LVS</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">GDSII<span>Virtuoso</span></div>
     </div>
 
     <div class="section project-body">
+
+      <!-- Overview -->
       <div>
-        <h2>Overview</h2>
-        <p>Describe the project at a high level. What is it, what does it do, and why did you build it? Give the reader enough context to understand the rest of the page.</p>
+        <h2>System Overview</h2>
+        <p>The ALU operates on two 32-bit operands <code>A</code> and <code>B</code> under a 4-bit function select <code>S[3:0]</code> and carry-in <code>Cin</code>, producing a 32-bit result <code>F</code> and carry-out <code>Cout</code>; two serial inputs feed the shift operations. The design was written in two styles — a structural/hierarchical core built from 32 one-bit slices and a single-block behavioural core — carried through the full RTL-to-GDS flow, compared, and the smaller/faster hierarchical core selected for chip integration.</p>
+
+        <div class="wiring">
+          <svg viewBox="0 0 460 300" role="img" aria-label="Top-level input/output interface of the 32-bit ALU">
+            <defs>
+              <linearGradient id="io-core" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2b2656"/><stop offset="1" stop-color="#141a3a"/>
+              </linearGradient>
+              <filter id="io-shadow" x="-40%" y="-40%" width="180%" height="180%">
+                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+              </filter>
+              <marker id="io-in" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,4.5 L0,9 Z" fill="#4ecdc4"/></marker>
+              <marker id="io-out" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,4.5 L0,9 Z" fill="#f77f00"/></marker>
+              <marker id="io-sft" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,4.5 L0,9 Z" fill="#9aa3b5"/></marker>
+            </defs>
+
+            <!-- inputs -->
+            <g stroke="#4ecdc4" stroke-width="2.5" fill="none" marker-end="url(#io-in)">
+              <path d="M62,100 H168"/><path d="M62,132 H168"/><path d="M62,164 H168"/><path d="M62,196 H168"/>
+            </g>
+            <g stroke="#4ecdc4" stroke-width="1.6"><path d="M104,94 l10,12"/><path d="M104,126 l10,12"/></g>
+            <g fill="#8fe6df" font-size="9" font-family="monospace"><text x="118" y="90">32</text><text x="118" y="122">32</text></g>
+            <g fill="#c7d0e6" font-size="12" font-family="monospace" text-anchor="end">
+              <text x="56" y="104">A[31:0]</text><text x="56" y="136">B[31:0]</text><text x="56" y="168">Cin</text><text x="56" y="200">S[3:0]</text>
+            </g>
+
+            <!-- core -->
+            <rect x="170" y="80" width="130" height="150" rx="14" fill="url(#io-core)" stroke="#f77f00" stroke-width="1.5" filter="url(#io-shadow)"/>
+            <text x="235" y="150" fill="#e9ecf5" font-size="17" font-weight="600" text-anchor="middle" font-family="monospace">32-bit</text>
+            <text x="235" y="172" fill="#c9b8ff" font-size="14" text-anchor="middle" font-family="monospace">ALU</text>
+
+            <!-- shift serial inputs (bottom) -->
+            <g stroke="#9aa3b5" stroke-width="2.5" fill="none" marker-end="url(#io-sft)">
+              <path d="M205,272 V232"/><path d="M265,272 V232"/>
+            </g>
+            <g fill="#8b97b0" font-size="10" font-family="monospace" text-anchor="middle">
+              <text x="205" y="288">Din,R</text><text x="265" y="288">Din,L</text>
+            </g>
+
+            <!-- outputs -->
+            <g stroke="#f77f00" stroke-width="2.5" fill="none" marker-end="url(#io-out)">
+              <path d="M300,120 H398"/><path d="M300,190 H398"/>
+            </g>
+            <g stroke="#f7b267" stroke-width="1.6"><path d="M342,114 l10,12"/></g>
+            <text x="356" y="110" fill="#f7b267" font-size="9" font-family="monospace">32</text>
+            <g fill="#c7d0e6" font-size="12" font-family="monospace">
+              <text x="404" y="124">F[31:0]</text><text x="404" y="194">Cout</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric"><span class="metric__value">45 nm</span><span class="metric__label">GPDK045 CMOS</span></div>
+          <div class="metric"><span class="metric__value">367</span><span class="metric__label">Std cells (core)</span></div>
+          <div class="metric"><span class="metric__value">975.5 µm²</span><span class="metric__label">Core area</span></div>
+          <div class="metric"><span class="metric__value">9.72 ns</span><span class="metric__label">Critical path</span></div>
+          <div class="metric"><span class="metric__value">≈103 MHz</span><span class="metric__label">Est. f_max</span></div>
+          <div class="metric"><span class="metric__value">104</span><span class="metric__label">Signal pads</span></div>
+        </div>
       </div>
 
+      <!-- Functional spec -->
       <div>
-        <h2>What I built</h2>
-        <p>Go into more detail about the system or feature you designed. What were the key technical decisions? What constraints did you work within?</p>
+        <h2>Functional Specification</h2>
+        <p>The four select bits are partitioned in hardware: the upper pair <code>S3 S2</code> chooses the operation class (arithmetic / logic / shift) at the output multiplexer, while the lower pair <code>S1 S0</code> chooses the specific function. <code>Cin</code> distinguishes the two operations that share each arithmetic opcode.</p>
+        <table class="spec-table">
+          <thead>
+            <tr><th>Class (S3 S2)</th><th>Select S1 S0</th><th>Function</th></tr>
+          </thead>
+          <tbody>
+            <tr><td rowspan="4">Arithmetic (00)</td><td>0 0</td><td>F = A  ·  F = A + 1 (Cin)</td></tr>
+            <tr><td>0 1</td><td>F = A + B  ·  A + B + 1</td></tr>
+            <tr><td>1 0</td><td>F = A + B̄  ·  A − B (subtract)</td></tr>
+            <tr><td>1 1</td><td>F = A − 1  ·  F = A</td></tr>
+            <tr><td rowspan="4">Logic (01)</td><td>0 0</td><td>F = A · B (AND)</td></tr>
+            <tr><td>0 1</td><td>F = A + B (OR)</td></tr>
+            <tr><td>1 0</td><td>F = A ⊕ B (XOR)</td></tr>
+            <tr><td>1 1</td><td>F = Ā (NOT)</td></tr>
+            <tr><td>Shift right (10)</td><td>X X</td><td>F = shr A (shift right one bit)</td></tr>
+            <tr><td>Shift left (11)</td><td>X X</td><td>F = shl A (shift left one bit)</td></tr>
+          </tbody>
+        </table>
       </div>
 
+      <!-- Architecture -->
       <div>
-        <h2>Challenges & learnings</h2>
-        <p>Describe any interesting problems you ran into and how you solved them. This is where you show depth — tradeoffs, debugging, and what you would do differently next time.</p>
+        <h2>Architecture — The 1-bit Slice</h2>
+        <p>The whole design rests on one carefully built block. Each 1-bit slice runs an arithmetic circuit and a logic circuit in parallel (both controlled by <code>S1 S0</code>), and an output 4:1 multiplexer selects between the arithmetic result, the logic result, and the two shifted versions of A (controlled by <code>S3 S2</code>). This two-level select is what makes every slice identical — no bit position needs special-case control.</p>
+
+        <div class="wiring">
+          <svg viewBox="0 0 660 310" role="img" aria-label="Datapath of the 1-bit ALU slice: arithmetic and logic circuits feeding a 4:1 output multiplexer">
+            <defs>
+              <linearGradient id="sl-blk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16224a"/><stop offset="1" stop-color="#0e1630"/></linearGradient>
+              <linearGradient id="sl-mux" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="rgba(247,183,103,0.34)"/><stop offset="1" stop-color="rgba(247,127,0,0.12)"/></linearGradient>
+              <filter id="sl-shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.45"/></filter>
+              <marker id="sl-arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,4.5 L0,9 Z" fill="#9fb0cf"/></marker>
+              <marker id="sl-arrT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,4.5 L0,9 Z" fill="#4ecdc4"/></marker>
+              <marker id="sl-arrO" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,4.5 L0,9 Z" fill="#f77f00"/></marker>
+            </defs>
+
+            <!-- inputs -->
+            <g stroke="#4ecdc4" stroke-width="2" fill="none" marker-end="url(#sl-arrT)">
+              <path d="M56,74 H78"/><path d="M56,94 H78"/><path d="M56,214 H78"/><path d="M56,234 H78"/>
+            </g>
+            <g fill="#c7d0e6" font-size="10" font-family="monospace" text-anchor="end">
+              <text x="52" y="78">A, B, Cin</text><text x="52" y="218">A, B</text>
+            </g>
+            <g fill="#8fe6df" font-size="10" font-family="monospace" text-anchor="end">
+              <text x="52" y="98">S1 S0</text><text x="52" y="238">S1 S0</text>
+            </g>
+
+            <!-- arithmetic block -->
+            <rect x="80" y="52" width="150" height="60" rx="9" fill="url(#sl-blk)" stroke="#4ecdc4" stroke-width="1.4" filter="url(#sl-shadow)"/>
+            <text x="155" y="80" fill="#e9ecf5" font-size="13" text-anchor="middle" font-family="monospace">Arithmetic</text>
+            <text x="155" y="97" fill="#8b97b0" font-size="9" text-anchor="middle" font-family="monospace">full adder + 4:1 mux</text>
+
+            <!-- logic block -->
+            <rect x="80" y="192" width="150" height="60" rx="9" fill="url(#sl-blk)" stroke="#4ecdc4" stroke-width="1.4" filter="url(#sl-shadow)"/>
+            <text x="155" y="220" fill="#e9ecf5" font-size="13" text-anchor="middle" font-family="monospace">Logic</text>
+            <text x="155" y="237" fill="#8b97b0" font-size="9" text-anchor="middle" font-family="monospace">AND / OR / XOR / NOT</text>
+
+            <!-- mux -->
+            <path d="M470,95 L525,130 L525,205 L470,240 Z" fill="url(#sl-mux)" stroke="#f7b267" stroke-width="1.5" filter="url(#sl-shadow)"/>
+            <text x="491" y="165" fill="#e9ecf5" font-size="11" text-anchor="middle" font-family="monospace">4:1</text>
+            <text x="491" y="180" fill="#f7b267" font-size="11" text-anchor="middle" font-family="monospace">MUX</text>
+
+            <!-- signals into the mux -->
+            <g stroke="#9fb0cf" stroke-width="1.8" fill="none" marker-end="url(#sl-arr)">
+              <path d="M230,84 H360 V116 H468"/>
+              <path d="M406,150 H468"/>
+              <path d="M406,186 H468"/>
+              <path d="M230,222 H468"/>
+            </g>
+            <g fill="#8b97b0" font-size="10" font-family="monospace">
+              <text x="300" y="78">Di</text><text x="300" y="216">Ei</text>
+              <text x="366" y="146">shr A</text><text x="366" y="182">shl A</text>
+            </g>
+
+            <!-- Fi output -->
+            <path d="M525,167 H620" stroke="#4ecdc4" stroke-width="2.4" fill="none" marker-end="url(#sl-arrT)"/>
+            <text x="626" y="164" fill="#4ecdc4" font-size="13" font-family="monospace">Fi</text>
+
+            <!-- Couti (carry-out from arithmetic) -->
+            <path d="M230,60 H300 V28 H620" stroke="#f77f00" stroke-width="1.8" fill="none" stroke-dasharray="5 4" marker-end="url(#sl-arrO)"/>
+            <text x="626" y="32" fill="#f77f00" font-size="11" font-family="monospace">Couti</text>
+
+            <!-- S3 S2 select control -->
+            <path d="M497,290 V242" stroke="#f7b267" stroke-width="1.8" fill="none" stroke-dasharray="5 4" marker-end="url(#sl-arrO)"/>
+            <text x="497" y="304" fill="#f7b267" font-size="10" text-anchor="middle" font-family="monospace">S3 S2</text>
+          </svg>
+          <div class="wiring__legend">
+            <span><span class="wiring__swatch" style="background:#4ecdc4"></span>S1 S0 — function inside units</span>
+            <span><span class="wiring__swatch" style="background:#f7b267"></span>S3 S2 — output class select</span>
+          </div>
+        </div>
+
+        <p>The arithmetic unit turns a single full adder into eight operations by multiplexing its second operand between <code>0</code>, <code>B</code>, <code>B̄</code> and <code>1</code>. Subtraction reuses the same adder in two's-complement form — <code>A − B = A + B̄ + 1</code> — so no dedicated subtractor is needed. The full adder shares its first XOR term between the sum and carry paths to minimise gate count:</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            full_adder.v · shared-term gate-level
+          </div>
+          <pre><code><span class="tok-kw">assign</span> sum_o  = a_i ^ b_i ^ cin_i;
+<span class="tok-kw">assign</span> cout_o = (a_i &amp; b_i) | (cin_i &amp; (a_i ^ b_i));</code></pre>
+        </div>
+
+        <div class="project-figure">
+          <img src="../images/alu-rtl-to-gds/fig05_alu1_synth.png" alt="Genus technology-mapped gate-level netlist of the 1-bit ALU slice">
+          <figcaption>Genus synthesis of the 1-bit slice — the elaborated, technology-mapped gate-level netlist (8 std cells).</figcaption>
+        </div>
+
+        <h3 style="font-size:1.05rem;margin:22px 0 4px;">Bit-slice chaining → 32-bit datapath</h3>
+        <p>Thirty-two identical slices are chained through a ripple carry: the external <code>Cin</code> enters slice 0, each slice passes its carry to the next, and the final carry becomes <code>Cout</code>. The same <code>S3 S2 S1 S0</code> bus fans out to every slice. Shifts are handled once at the top level on the whole word.</p>
+
+        <div class="wiring">
+          <svg viewBox="0 0 760 160" role="img" aria-label="Ripple-carry chaining of thirty-two 1-bit ALU slices">
+            <defs>
+              <linearGradient id="rc-blk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16224a"/><stop offset="1" stop-color="#0e1630"/></linearGradient>
+              <filter id="rc-shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.45"/></filter>
+              <marker id="rc-c" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L7.5,4.5 L0,9 Z" fill="#f7b267"/></marker>
+              <marker id="rc-in" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L6.5,4 L0,8 Z" fill="#4ecdc4"/></marker>
+              <marker id="rc-out" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L6.5,4 L0,8 Z" fill="#7f8db0"/></marker>
+            </defs>
+
+            <!-- carry chain -->
+            <text x="16" y="86" fill="#c7d0e6" font-size="11" font-family="monospace" text-anchor="start">Cin</text>
+            <g stroke="#f7b267" stroke-width="2.4" fill="none" marker-end="url(#rc-c)">
+              <path d="M42,82 H70"/><path d="M162,82 H210"/><path d="M302,82 H350"/><path d="M442,82 H478"/><path d="M525,82 H560"/><path d="M652,82 H688"/>
+            </g>
+            <text x="694" y="86" fill="#c7d0e6" font-size="11" font-family="monospace" text-anchor="start">Cout</text>
+            <g fill="#f7b267" font-size="9" font-family="monospace" text-anchor="middle">
+              <text x="186" y="74">C1</text><text x="326" y="74">C2</text><text x="542" y="74">C31</text>
+            </g>
+
+            <!-- slice boxes -->
+            <g font-family="monospace" text-anchor="middle">
+              <rect x="70"  y="60" width="92" height="46" rx="8" fill="url(#rc-blk)" stroke="#4ecdc4" stroke-width="1.3" filter="url(#rc-shadow)"/><text x="116" y="88" fill="#e9ecf5" font-size="11">slice 0</text>
+              <rect x="210" y="60" width="92" height="46" rx="8" fill="url(#rc-blk)" stroke="#4ecdc4" stroke-width="1.3" filter="url(#rc-shadow)"/><text x="256" y="88" fill="#e9ecf5" font-size="11">slice 1</text>
+              <rect x="350" y="60" width="92" height="46" rx="8" fill="url(#rc-blk)" stroke="#4ecdc4" stroke-width="1.3" filter="url(#rc-shadow)"/><text x="396" y="88" fill="#e9ecf5" font-size="11">slice 2</text>
+              <text x="501" y="90" fill="#6b7a99" font-size="20">···</text>
+              <rect x="560" y="60" width="92" height="46" rx="8" fill="url(#rc-blk)" stroke="#4ecdc4" stroke-width="1.3" filter="url(#rc-shadow)"/><text x="606" y="88" fill="#e9ecf5" font-size="11">slice 31</text>
+            </g>
+
+            <!-- operand inputs (top) -->
+            <g stroke="#4ecdc4" stroke-width="1.6" fill="none" marker-end="url(#rc-in)">
+              <path d="M116,32 V58"/><path d="M256,32 V58"/><path d="M396,32 V58"/><path d="M606,32 V58"/>
+            </g>
+            <g fill="#8fe6df" font-size="9" font-family="monospace" text-anchor="middle">
+              <text x="116" y="24">A0 B0</text><text x="256" y="24">A1 B1</text><text x="396" y="24">A2 B2</text><text x="606" y="24">A31 B31</text>
+            </g>
+
+            <!-- result outputs (bottom) -->
+            <g stroke="#7f8db0" stroke-width="1.6" fill="none" marker-end="url(#rc-out)">
+              <path d="M116,108 V134"/><path d="M256,108 V134"/><path d="M396,108 V134"/><path d="M606,108 V134"/>
+            </g>
+            <g fill="#8b97b0" font-size="9" font-family="monospace" text-anchor="middle">
+              <text x="116" y="148">F0</text><text x="256" y="148">F1</text><text x="396" y="148">F2</text><text x="606" y="148">F31</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- RTL-to-GDS flow -->
+      <div>
+        <h2>The RTL-to-GDS Flow</h2>
+        <p>Design intent is captured at the register-transfer level and progressively refined — through synthesis and physical implementation — into geometry, with functional and physical correctness checked at every hand-off. A failed signoff check (timing / DRC / connectivity) loops back as an ECO fix.</p>
+
+        <ol class="dsp-pipeline">
+          <li class="dsp-stage"><span class="dsp-stage__num">1</span><div class="dsp-stage__body"><span class="dsp-stage__name">Specification</span><span class="dsp-stage__desc">Function table and top-level I/O.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">2</span><div class="dsp-stage__body"><span class="dsp-stage__name">RTL design</span><span class="dsp-stage__desc">Synthesisable Verilog — structural and behavioural styles.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">3</span><div class="dsp-stage__body"><span class="dsp-stage__name">Functional simulation</span><span class="dsp-stage__desc">Xcelium (SimVision) against exhaustive self-checking testbenches.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">4</span><div class="dsp-stage__body"><span class="dsp-stage__name">Logic synthesis</span><span class="dsp-stage__desc">Genus + gsclib045 → gate netlist, .sdc, area/power/timing reports.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">5</span><div class="dsp-stage__body"><span class="dsp-stage__name">Place &amp; route</span><span class="dsp-stage__desc">Innovus: floorplan, power, placement, routing, post-route timing.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">6</span><div class="dsp-stage__body"><span class="dsp-stage__name">Physical signoff</span><span class="dsp-stage__desc">DRC, connectivity and timing — loops back on any violation.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">7</span><div class="dsp-stage__body"><span class="dsp-stage__name">GDSII export</span><span class="dsp-stage__desc">Core layout streamed out as alu_32bit.gds.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">8</span><div class="dsp-stage__body"><span class="dsp-stage__name">Chip integration</span><span class="dsp-stage__desc">Pad-frame assembly and full-chip stream-out in Virtuoso.</span></div></li>
+        </ol>
+
+        <table class="spec-table">
+          <thead><tr><th>Item</th><th>Setting</th></tr></thead>
+          <tbody>
+            <tr><td>Process</td><td>Cadence GPDK045 · 45 nm bulk CMOS</td></tr>
+            <tr><td>Standard-cell library</td><td>gsclib045 (tech + macro LEF)</td></tr>
+            <tr><td>Timing corner</td><td>PVT_0P9V_125C — worst-case slow_vdd1v0</td></tr>
+            <tr><td>Supply / ground</td><td>VDD / VSS</td></tr>
+            <tr><td>Routing pin layer</td><td>Metal 4</td></tr>
+          </tbody>
+        </table>
+
+        <table class="spec-table">
+          <thead><tr><th>Stage</th><th>Tool</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td>Simulation</td><td>Xcelium (SimVision)</td><td>Event-driven RTL verification vs testbenches</td></tr>
+            <tr><td>Synthesis</td><td>Genus 21.17</td><td>RTL → gate netlist; area / power / timing</td></tr>
+            <tr><td>Place &amp; Route</td><td>Innovus</td><td>Floorplan, power, placement, routing, timing</td></tr>
+            <tr><td>Signoff</td><td>Innovus / Pegasus / Assura</td><td>DRC and connectivity (LVS-style) checks</td></tr>
+            <tr><td>Chip assembly</td><td>Virtuoso</td><td>Pad-frame placement, I/O wiring, stream-out</td></tr>
+          </tbody>
+        </table>
+        <p>Choosing the slow, low-voltage, high-temperature corner (0.9 V, 125 °C) for setup analysis is deliberate — it is the worst case for cell delay, so timing that closes here closes across the operating range.</p>
+      </div>
+
+      <!-- Synthesis & comparison -->
+      <div>
+        <h2>Synthesis Results &amp; Core Selection</h2>
+        <p>Three designs were carried through the flow: the 1-bit slice, the 32-bit hierarchical (structural) core, and a 32-bit behavioural core. The behavioural code writes each arithmetic operation as an independent <code>+</code>, so the synthesiser infers about twice the adder hardware (64 vs 32 full adders) and cannot share it — making it substantially larger.</p>
+
+        <table class="spec-table">
+          <thead><tr><th>Metric</th><th>1-bit slice</th><th>32-bit hierarchical</th><th>32-bit behavioural</th></tr></thead>
+          <tbody>
+            <tr><td>Standard cells</td><td>12</td><td>367</td><td>635</td></tr>
+            <tr><td>Total area (µm²)</td><td>39.67</td><td>975.45</td><td>1487.02</td></tr>
+            <tr><td>Total power (µW)</td><td>0.998</td><td>25.32</td><td>22.29</td></tr>
+            <tr><td>Critical path (ns)</td><td>3.881</td><td>9.724</td><td>9.832</td></tr>
+            <tr><td>Est. f_max (MHz)</td><td>≈257</td><td>≈103</td><td>≈102</td></tr>
+          </tbody>
+        </table>
+
+        <div class="fig-row fig-row--col">
+          <figure class="project-figure">
+            <img src="../images/alu-rtl-to-gds/fig13_hier_synth.png" alt="Genus synthesis schematic of the 32-bit hierarchical ALU">
+            <figcaption>Genus synthesis of the 32-bit hierarchical core — 367 leaf cells across 32 slice modules.</figcaption>
+          </figure>
+          <figure class="project-figure project-figure--sm">
+            <img src="../images/alu-rtl-to-gds/fig14_hier_area.png" alt="Genus area report for the 32-bit hierarchical ALU">
+            <figcaption>Genus area report — 32 ADDFX1 full adders form the arithmetic backbone.</figcaption>
+          </figure>
+        </div>
+
+        <div class="bar-chart" aria-hidden="true">
+          <div class="bar-chart__col">
+            <div class="bar-chart__bar bar-chart__bar--a" style="height:54%"><span class="bar-chart__value">975.5</span></div>
+            <div class="bar-chart__label">Hierarchical<br>(structural)</div>
+          </div>
+          <div class="bar-chart__col">
+            <div class="bar-chart__bar bar-chart__bar--b" style="height:82%"><span class="bar-chart__value">1487.0</span></div>
+            <div class="bar-chart__label">Behavioural</div>
+          </div>
+          <span class="bar-chart__delta">−34.4% area</span>
+        </div>
+        <p style="text-align:center;font-size:0.8rem;color:var(--muted);margin-top:8px;">Core area (µm²) — hierarchical vs behavioural</p>
+
+        <p><strong>Area:</strong> the hierarchical core is 34.4% smaller thanks to operand-mux reuse of a single adder per slice. <strong>Speed:</strong> the two are effectively tied (9.72 vs 9.83 ns) — both limited by a 32-stage ripple-carry chain that dominates the critical path (≈186 ps per adder stage). <strong>Power:</strong> the behavioural design draws marginally less total power because its redundant adders are not all active for a given operation, a small effect that does not offset the area gap.</p>
+
+        <div class="project-figure">
+          <img src="../images/alu-rtl-to-gds/fig11_alu1_timing.png" alt="Genus timing report showing the critical path through the arithmetic mux and full adder">
+          <figcaption>Genus timing report — the critical path traverses the arithmetic mux and full adder; at the 32-bit level it becomes the 32-stage ripple-carry chain.</figcaption>
+        </div>
+
+        <div class="hazard-flow" style="margin-top:6px;">
+          <div class="hazard-flow__node"><strong>Selected core → 32-bit hierarchical (structural)</strong><span>34.4% smaller and marginally faster at equivalent functionality — streamed out as alu_32bit.gds for chip integration.</span></div>
+        </div>
+
+        <h3 style="font-size:1.05rem;margin:22px 0 4px;">Key design decisions</h3>
+        <ol class="dsp-pipeline">
+          <li class="dsp-stage"><span class="dsp-stage__num">1</span><div class="dsp-stage__body"><span class="dsp-stage__name">Bit-slice architecture</span><span class="dsp-stage__desc">One verified 1-bit cell tiled 32× — modularity, reuse, and low verification effort.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">2</span><div class="dsp-stage__body"><span class="dsp-stage__name">Single shared adder per slice</span><span class="dsp-stage__desc">Add / subtract / increment / decrement by multiplexing the adder's second operand (0, B, B̄, 1); two's-complement subtraction.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">3</span><div class="dsp-stage__body"><span class="dsp-stage__name">Two-level select</span><span class="dsp-stage__desc">S3 S2 picks the operation class at the output mux; S1 S0 picks the specific function — every slice stays identical.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">4</span><div class="dsp-stage__body"><span class="dsp-stage__name">Structural over behavioural</span><span class="dsp-stage__desc">Chosen for 34.4% smaller area through adder sharing, at equal speed.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">5</span><div class="dsp-stage__body"><span class="dsp-stage__name">Worst-case corner signoff</span><span class="dsp-stage__desc">slow_vdd1v0 / PVT_0P9V_125C so timing closure is conservative across the operating range.</span></div></li>
+        </ol>
+      </div>
+
+      <!-- Place & route -->
+      <div>
+        <h2>Place &amp; Route</h2>
+        <p>The synthesised netlist is imported into Innovus, floorplanned, and given power rails (VDD/VSS), placement and routing. The 32-bit hierarchical core places into a die of roughly 50.8 × 44.5 µm, with the ripple-carry adder chain forming the dominant routed path.</p>
+
+        <div class="project-figure">
+          <img src="../images/alu-rtl-to-gds/fig16_hier_pnr.png" alt="Innovus place-and-route of the 32-bit hierarchical ALU">
+          <figcaption>Innovus place-and-route of the 32-bit hierarchical core — power rails, standard-cell rows and the ripple-carry routing across a die of roughly 50.8 × 44.5 µm.</figcaption>
+        </div>
+      </div>
+
+      <!-- Physical verification -->
+      <div>
+        <h2>Physical Verification</h2>
+        <p>Two signoff checks confirm the layout is manufacturable and matches the netlist. Both pass cleanly on every design: the geometry obeys all 45 nm design rules, and every net is fully connected with no opens or shorts.</p>
+
+        <div class="signoff-grid">
+          <div class="signoff-card">
+            <span class="signoff-card__badge">✓</span>
+            <div><div class="signoff-card__title">DRC — 0 Violations</div><div class="signoff-card__sub">45 nm design-rule check, all sub-areas clean</div></div>
+          </div>
+          <div class="signoff-card">
+            <span class="signoff-card__badge">✓</span>
+            <div><div class="signoff-card__title">Connectivity — 0 Viols · 0 Wrngs</div><div class="signoff-card__sub">All nets connected, no opens or shorts</div></div>
+          </div>
+        </div>
+
+        <div class="fig-row">
+          <figure class="project-figure">
+            <img src="../images/alu-rtl-to-gds/fig17_hier_drc.png" alt="Innovus design-rule check result for the 32-bit hierarchical ALU">
+            <figcaption>DRC signoff — 0 violations.</figcaption>
+          </figure>
+          <figure class="project-figure">
+            <img src="../images/alu-rtl-to-gds/fig18_hier_conn.png" alt="Innovus connectivity verification for the 32-bit hierarchical ALU">
+            <figcaption>Connectivity check — no problems or warnings.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- Verification & test flows -->
+      <div>
+        <h2>Verification &amp; Test Flow</h2>
+        <p>Because every block is small, verification uses <em>exhaustive</em> rather than random vectors. Each sub-block (4:1 mux, arithmetic circuit, logic circuit) is checked in Xcelium with a self-checking testbench that sweeps all input combinations, then the assembled slice is verified against the full functional table, and finally the 32-bit cores are simulated with wide operands across every operation class.</p>
+
+        <div class="fig-row">
+          <figure class="project-figure">
+            <img src="../images/alu-rtl-to-gds/fig04_alu1_sim.png" alt="1-bit ALU testbench simulation waveform in Xcelium SimVision">
+            <figcaption>1-bit ALU waveform — arithmetic, logic and shift operations of the functional table.</figcaption>
+          </figure>
+          <figure class="project-figure">
+            <img src="../images/alu-rtl-to-gds/fig12_hier_sim.png" alt="32-bit hierarchical ALU simulation waveform">
+            <figcaption>32-bit hierarchical ALU — wide-operand simulation across all operation classes.</figcaption>
+          </figure>
+        </div>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            tb_1bit_alu.v · directed stimulus (excerpt)
+          </div>
+          <pre><code>a = <span class="tok-str">1'b1</span>; b = <span class="tok-str">1'b0</span>;
+sel = <span class="tok-str">4'b0000</span>; cin = <span class="tok-str">1'b0</span>; #5;  <span class="tok-com">// F = A</span>
+sel = <span class="tok-str">4'b0001</span>; cin = <span class="tok-str">1'b0</span>; #5;  <span class="tok-com">// F = A + B</span>
+sel = <span class="tok-str">4'b0010</span>; cin = <span class="tok-str">1'b1</span>; #5;  <span class="tok-com">// F = A - B  (two's complement)</span>
+sel = <span class="tok-str">4'b0100</span>;             #5;  <span class="tok-com">// F = A &amp; B</span>
+sel = <span class="tok-str">4'b1000</span>;             #5;  <span class="tok-com">// F = shr A</span>
+$finish;</code></pre>
+        </div>
+
+        <p>Shifts are handled once at the top level rather than inside each slice, mirroring the per-slice output mux but applied to the whole word:</p>
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            alu_32bit.v · top-level shift handling
+          </div>
+          <pre><code><span class="tok-kw">assign</span> f_o = (sel[3:2] == <span class="tok-str">2'b10</span>) ? (a &gt;&gt; 1) :
+             (sel[3:2] == <span class="tok-str">2'b11</span>) ? (a &lt;&lt; 1) : ripple_result;
+<span class="tok-kw">assign</span> cout_o = (sel[3:2] == <span class="tok-str">2'b10</span> || sel[3:2] == <span class="tok-str">2'b11</span>) ? <span class="tok-str">1'b0</span> : carry[32];</code></pre>
+        </div>
+
+        <p>A representative verification vector set — the 4:1 multiplexer, exercised across both complementary operand sets:</p>
+        <table class="spec-table">
+          <thead><tr><th>a b c d</th><th>S1 S0</th><th>y</th></tr></thead>
+          <tbody>
+            <tr><td>0 1 0 1</td><td>0 0</td><td>0</td></tr>
+            <tr><td>0 1 0 1</td><td>0 1</td><td>1</td></tr>
+            <tr><td>0 1 0 1</td><td>1 0</td><td>0</td></tr>
+            <tr><td>0 1 0 1</td><td>1 1</td><td>1</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pad frame -->
+      <div>
+        <h2>Pad Frame &amp; Chip Integration</h2>
+        <p>The selected core is streamed out as GDSII and placed inside a 104-signal pad ring — 26 pads on each of the four edges — in Virtuoso. Grouping the buses by edge keeps the core-to-pad routing short: operands A/B enter from the top and left, the result F leaves from the right and bottom, and the controls sit together on the bottom edge. Corner pads carry VDD/VSS.</p>
+
+        <div class="fig-row">
+          <figure class="project-figure">
+            <img src="../images/alu-rtl-to-gds/fig26_chip_padframe.png" alt="Virtuoso assembly of the hierarchical 32-bit ALU into the pad frame">
+            <figcaption>Virtuoso full-chip assembly — core inside the pad frame; green/pink traces are the completed core-to-pad connections.</figcaption>
+          </figure>
+          <figure class="project-figure">
+            <img src="../images/alu-rtl-to-gds/fig27_chip_pindiagram.png" alt="Chip pin and bond diagram for the 32-bit ALU">
+            <figcaption>Corresponding chip pin / bond diagram.</figcaption>
+          </figure>
+        </div>
+
+        <table class="spec-table">
+          <thead><tr><th>Edge</th><th>Signals</th><th>Pads</th></tr></thead>
+          <tbody>
+            <tr><td>Top</td><td>A[0:25] — operand A, low half</td><td>26</td></tr>
+            <tr><td>Left</td><td>A[26:31], B[0:19]</td><td>26</td></tr>
+            <tr><td>Bottom</td><td>B[20:31], S[0:3], Cin, DR, DL, F[26:31], Cout</td><td>26</td></tr>
+            <tr><td>Right</td><td>F[0:25] — result F, low half</td><td>26</td></tr>
+            <tr><td><strong>Total signal pads</strong></td><td>VDD/VSS supplied by the pad frame</td><td><strong>104</strong></td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.8rem;color:var(--muted);">Status: the core is placed and a subset of I/O nets are wired; the pad plan, pin assignment and routing methodology are fully defined — completing the remaining pad connections and re-running full-chip DRC/LVS is the final step to a tape-out-ready layout.</p>
+      </div>
+
+      <!-- Results & future work -->
+      <div>
+        <h2>Results &amp; Future Work</h2>
+        <table class="spec-table">
+          <thead><tr><th></th><th>1-bit slice</th><th>32-bit hierarchical</th><th>32-bit behavioural</th></tr></thead>
+          <tbody>
+            <tr><td>Cells</td><td>12</td><td>367</td><td>635</td></tr>
+            <tr><td>Area (µm²)</td><td>39.67</td><td>975.45</td><td>1487.02</td></tr>
+            <tr><td>Power (µW)</td><td>0.998</td><td>25.32</td><td>22.29</td></tr>
+            <tr><td>Critical path (ns)</td><td>3.881</td><td>9.724</td><td>9.832</td></tr>
+            <tr><td>f_max (MHz)</td><td>≈257</td><td>≈103</td><td>≈102</td></tr>
+            <tr><td>DRC / connectivity</td><td>clean</td><td>clean</td><td>clean</td></tr>
+          </tbody>
+        </table>
+
+        <div class="future-grid">
+          <div class="future-card">
+            <h3>Delivered</h3>
+            <ul>
+              <li>Full RTL → GDSII flow exercised end-to-end on GPDK045 45 nm</li>
+              <li>Bit-slice 1-bit cell verified and tiled into a 32-bit core</li>
+              <li>Structural vs behavioural compared; smaller core selected &amp; integrated</li>
+              <li>DRC and connectivity clean on every design</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Future Work</h3>
+            <ul>
+              <li>Replace ripple carry with carry-lookahead / carry-select to break the ≈100 MHz limit</li>
+              <li>Complete all 104 pad connections and run full-chip DRC/LVS</li>
+              <li>Wire the reserved DR/DL pads for true serial shift</li>
+              <li>Add input/output registers &amp; a clock tree for a pipelined datapath</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="project-links">
-        <a href="#" class="btn">View on GitHub</a>
-        <a href="#" class="btn btn--ghost">Live Demo</a>
+        <a href="https://github.com/salwan-aldhahab/RTL-to-GDS_32BitALU" class="btn" target="_blank" rel="noopener noreferrer">View on GitHub</a>
       </div>
+
     </div>
   </div>
 

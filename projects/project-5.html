@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Five — Salwan Aldhahab</title>
+  <title>YUPlanner — Salwan Aldhahab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
         <img src="../images/profile.jpg" alt="Salwan Aldhahab headshot">
         <div class="logo__text">
           <span class="logo__name">Salwan Aldhahab</span>
-          <span class="logo__subtitle">Hardware & Software Engineer</span>
+          <span class="logo__subtitle">Hardware &amp; Software Engineer</span>
         </div>
       </div>
       <nav class="nav">
@@ -30,38 +30,654 @@
   </header>
 
   <div class="project-page">
+
     <div class="project-hero">
       <a href="../index.html#projects" class="back-link">← Back to projects</a>
-      <p class="eyebrow">Project 05 · Category</p>
-      <h1>Project Five</h1>
-      <p class="lede">A concise one-liner describing what this project does and why it matters.</p>
+      <p class="eyebrow">Project 05 · Full-Stack Web App</p>
+      <h1>YUPlanner</h1>
+      <p class="lede">A full-stack academic-planning web app for York University students. A React single-page app talks to a Spring Boot REST API backed by MySQL, unifying course search, conflict-free scheduling, professor ratings, progress tracking and PDF export — with dedicated Student, Professor and Advisor roles.</p>
       <ul class="pill-list">
-        <li>Tool A</li>
-        <li>Tool B</li>
-        <li>Tool C</li>
+        <li>React 18</li>
+        <li>Spring Boot 3.3.5</li>
+        <li>Java 17</li>
+        <li>MySQL 8</li>
+        <li>Material-UI 6</li>
+        <li>REST / JSON</li>
       </ul>
+      <p class="eyebrow">EECS 3311 · Software Design · York University — Group 8</p>
+      <div class="hero__actions" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
+        <a href="#" class="btn" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        <a href="https://www.youtube.com/watch?v=25Xqdr13NMs" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Sprint 1 Demo</a>
+        <a href="https://youtu.be/3GhPyGNPRdU" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Sprint 2 Demo</a>
+      </div>
+    </div>
+
+    <!-- Animated request-flow hero -->
+    <div class="pipeline-hero" aria-hidden="true">
+      <div class="pipeline-hero__stage">Browser<span>React SPA</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">Controller<span>@RestController</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">Service<span>business logic</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">Repository<span>Spring Data JPA</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">MySQL<span>Hibernate / JDBC</span></div>
     </div>
 
     <div class="section project-body">
+
+      <!-- Overview & roles -->
       <div>
         <h2>Overview</h2>
-        <p>Describe the project at a high level. What is it, what does it do, and why did you build it? Give the reader enough context to understand the rest of the page.</p>
+        <p>YUPlanner is a classic three-tier web application: a JavaScript SPA in the browser, a Java REST service, and a relational database. Rather than juggling several disconnected tools, a student can search the catalogue, check prerequisites, build a conflict-free timetable, review professor ratings, track progress, and export a schedule to PDF — all from one interface. The system serves three roles, each with a dedicated dashboard and navigation.</p>
+
+        <div class="future-grid">
+          <div class="future-card">
+            <h3>Student</h3>
+            <ul>
+              <li>Browse / search / filter the course catalogue &amp; prerequisites</li>
+              <li>Add &amp; drop courses; weekly schedule view</li>
+              <li>Academic-progress tracking; professor ratings &amp; reviews</li>
+              <li>Export schedule to PDF (jsPDF)</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Professor</h3>
+            <ul>
+              <li>View &amp; manage assigned course sections</li>
+              <li>Edit professor profile</li>
+              <li>Read aggregated student reviews &amp; average rating</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Advisor</h3>
+            <ul>
+              <li>View all catalogue courses</li>
+              <li>Oversee advised students and their records</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric"><span class="metric__value">3</span><span class="metric__label">Tiers</span></div>
+          <div class="metric"><span class="metric__value">5</span><span class="metric__label">JPA entities</span></div>
+          <div class="metric"><span class="metric__value">3</span><span class="metric__label">User roles</span></div>
+          <div class="metric"><span class="metric__value">~15</span><span class="metric__label">REST endpoints</span></div>
+          <div class="metric"><span class="metric__value">3000·8080·3306</span><span class="metric__label">SPA · API · DB ports</span></div>
+          <div class="metric"><span class="metric__value">Agile</span><span class="metric__label">Sprints 0–2</span></div>
+        </div>
       </div>
 
+      <!-- Technology stack -->
       <div>
-        <h2>What I built</h2>
-        <p>Go into more detail about the system or feature you designed. What were the key technical decisions? What constraints did you work within?</p>
+        <h2>Technology Stack</h2>
+        <table class="spec-table">
+          <thead><tr><th>Backend</th><th>Technology</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Language</td><td>Java 17</td><td>maven.compiler 17</td></tr>
+            <tr><td>Framework</td><td>Spring Boot 3.3.5</td><td>spring-boot-starter-parent</td></tr>
+            <tr><td>Web / REST</td><td>Spring Web (MVC)</td><td>embedded Tomcat</td></tr>
+            <tr><td>Persistence</td><td>Spring Data JPA · Hibernate</td><td>MySQLDialect</td></tr>
+            <tr><td>Build</td><td>Apache Maven</td><td>mvnw wrapper included</td></tr>
+          </tbody>
+        </table>
+        <table class="spec-table">
+          <thead><tr><th>Frontend</th><th>Technology</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Library</td><td>React 18.3.1</td><td>Create React App (react-scripts 5)</td></tr>
+            <tr><td>Routing</td><td>react-router-dom 6.28</td><td>client-side routing</td></tr>
+            <tr><td>UI kit</td><td>Material-UI 6.1.9</td><td>+ Emotion 11 styling</td></tr>
+            <tr><td>HTTP</td><td>Axios 1.7.8 + Fetch API</td><td>REST calls to backend</td></tr>
+            <tr><td>PDF export</td><td>jsPDF 2.5.2</td><td>+ autotable / html2canvas</td></tr>
+          </tbody>
+        </table>
+        <table class="spec-table">
+          <thead><tr><th>Database</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Engine</td><td>MySQL 8.0.40 (InnoDB, utf8mb4)</td></tr>
+            <tr><td>Schema</td><td>yuplanner</td></tr>
+            <tr><td>JDBC URL</td><td>jdbc:mysql://localhost:3306/yuplanner</td></tr>
+            <tr><td>Schema strategy</td><td>spring.jpa.hibernate.ddl-auto=update</td></tr>
+            <tr><td>Seed data</td><td>backend/db/yuplanner.sql</td></tr>
+          </tbody>
+        </table>
       </div>
 
+      <!-- System architecture -->
       <div>
-        <h2>Challenges & learnings</h2>
-        <p>Describe any interesting problems you ran into and how you solved them. This is where you show depth — tradeoffs, debugging, and what you would do differently next time.</p>
+        <h2>System Architecture</h2>
+        <p>A three-tier architecture with a clear separation between presentation, application, and data. Presentation ↔ application is stateless HTTP with JSON bodies; application ↔ data is JDBC mediated by Hibernate.</p>
+
+        <div class="tier-stack">
+          <div class="tier tier--client">
+            <span class="tier__title">Presentation Tier — React 18 SPA</span>
+            <span class="tier__meta">Pages &amp; Components · React Router v6 · UserContext · Material-UI · Axios / Fetch · jsPDF — runs in the browser at <code>localhost:3000</code></span>
+          </div>
+          <div class="tier-conn"><span>HTTP · REST · JSON — CORS (<code>@CrossOrigin</code>)</span></div>
+          <div class="tier tier--server">
+            <span class="tier__title">Application Tier — Spring Boot 3.3.5 REST API (Java 17)</span>
+            <span class="tier__meta">Controllers → Services → Repositories · embedded Tomcat at <code>localhost:8080</code></span>
+          </div>
+          <div class="tier-conn"></div>
+          <div class="tier tier--orm">
+            <span class="tier__title">Spring Data JPA / Hibernate</span>
+            <span class="tier__meta">object–relational mapping (entities ↔ tables)</span>
+          </div>
+          <div class="tier-conn"><span>JDBC</span></div>
+          <div class="tier tier--data">
+            <span class="tier__title">MySQL 8</span>
+            <span class="tier__meta">database <code>yuplanner</code> · <code>:3306</code></span>
+          </div>
+        </div>
+
+        <h3 style="font-size:1.05rem;margin:22px 0 4px;">Deployment topology</h3>
+        <p>In the documented development configuration, all three tiers run on the developer's workstation.</p>
+        <div class="wiring">
+          <svg viewBox="0 0 720 200" role="img" aria-label="Development deployment topology: browser, Spring Boot JVM, and MySQL on one workstation">
+            <rect x="12" y="30" width="696" height="150" rx="8" fill="none" stroke="rgba(255,255,255,0.2)" stroke-dasharray="5 4"/>
+            <text x="360" y="24" fill="#8b97b0" font-size="11" font-family="monospace" text-anchor="middle" font-weight="600">Developer Workstation</text>
+            <g font-family="monospace" text-anchor="middle">
+              <rect x="40" y="70" width="170" height="80" rx="8" fill="#111a35" stroke="rgba(77,139,242,0.5)"/>
+              <text x="125" y="98" fill="#e9ecf5" font-size="12" font-weight="600">Web Browser</text>
+              <text x="125" y="116" fill="#8b97b0" font-size="9">CRA dev server · React SPA</text>
+              <text x="125" y="136" fill="#7aa9f5" font-size="10">localhost:3000</text>
+
+              <rect x="275" y="70" width="170" height="80" rx="8" fill="#111a35" stroke="rgba(107,212,160,0.5)"/>
+              <text x="360" y="98" fill="#e9ecf5" font-size="12" font-weight="600">JVM (Java 17)</text>
+              <text x="360" y="116" fill="#8b97b0" font-size="9">Spring Boot + Tomcat</text>
+              <text x="360" y="136" fill="#6bd4a0" font-size="10">localhost:8080</text>
+
+              <rect x="510" y="70" width="170" height="80" rx="8" fill="#0f1c3f" stroke="rgba(78,205,196,0.5)"/>
+              <text x="595" y="98" fill="#e9ecf5" font-size="12" font-weight="600">MySQL 8</text>
+              <text x="595" y="116" fill="#4ecdc4" font-size="10">localhost:3306</text>
+              <text x="595" y="134" fill="#8b97b0" font-size="9">schema yuplanner</text>
+
+              <g stroke="rgba(255,255,255,0.4)" stroke-width="1.6" fill="none">
+                <path d="M212,105 H273"/><path d="M447,105 H508"/>
+              </g>
+              <g fill="rgba(255,255,255,0.55)"><polygon points="273,105 266,101 266,109"/><polygon points="212,105 219,101 219,109"/><polygon points="508,105 501,101 501,109"/><polygon points="447,105 454,101 454,109"/></g>
+              <g fill="#8b97b0" font-size="9">
+                <text x="242" y="98" text-anchor="middle">HTTP/JSON</text><text x="242" y="122" text-anchor="middle">REST</text>
+                <text x="477" y="98" text-anchor="middle">JDBC</text><text x="477" y="122" text-anchor="middle">SQL</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <h3 style="font-size:1.05rem;margin:22px 0 4px;">Request lifecycle</h3>
+        <ol class="dsp-pipeline">
+          <li class="dsp-stage"><span class="dsp-stage__num">1</span><div class="dsp-stage__body"><span class="dsp-stage__name">React component issues an HTTP request</span><span class="dsp-stage__desc">Axios or Fetch to a backend URL, e.g. <code>GET http://localhost:8080/course/getAll</code>.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">2</span><div class="dsp-stage__body"><span class="dsp-stage__name">Spring MVC routes to a @RestController</span><span class="dsp-stage__desc">Matched by HTTP method + path.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">3</span><div class="dsp-stage__body"><span class="dsp-stage__name">Controller delegates to a service</span><span class="dsp-stage__desc">Business logic lives behind the service interface.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">4</span><div class="dsp-stage__body"><span class="dsp-stage__name">Service calls a repository</span><span class="dsp-stage__desc">A Spring Data <code>JpaRepository</code> reads/writes entities.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">5</span><div class="dsp-stage__body"><span class="dsp-stage__name">Hibernate → SQL over JDBC</span><span class="dsp-stage__desc">Entity operations translated to SQL against MySQL.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">6</span><div class="dsp-stage__body"><span class="dsp-stage__name">Controller serialises the result to JSON</span><span class="dsp-stage__desc">Spring returns the HTTP response.</span></div></li>
+          <li class="dsp-stage"><span class="dsp-stage__num">7</span><div class="dsp-stage__body"><span class="dsp-stage__name">Component updates state &amp; re-renders</span><span class="dsp-stage__desc">The SPA reflects the new data.</span></div></li>
+        </ol>
+        <p style="font-size:0.85rem;color:var(--muted);">CORS: <code>courseController</code> restricts access to <code>http://localhost:3000</code>; the other controllers use a bare <code>@CrossOrigin</code> (all origins) — flagged in Limitations.</p>
+      </div>
+
+      <!-- Backend design -->
+      <div>
+        <h2>Backend Design</h2>
+        <p>The backend is organised into four cooperating layers. A request enters at the controller layer and descends through service and repository layers to the entity/database layer; results return along the same path.</p>
+
+        <div class="tier-stack">
+          <div class="tier tier--client">
+            <span class="tier__title">Controller Layer — <code>@RestController</code></span>
+            <span class="tier__meta">studentController · courseController · professorController · advisorController · RatingController</span>
+          </div>
+          <div class="tier-conn"><span>call</span></div>
+          <div class="tier tier--server">
+            <span class="tier__title">Service Layer — business logic (interface + Impl)</span>
+            <span class="tier__meta">studentService · courseService · professorService · advisorService · RatingService</span>
+          </div>
+          <div class="tier-conn"><span>delegate</span></div>
+          <div class="tier tier--orm">
+            <span class="tier__title">Repository Layer — Spring Data JPA</span>
+            <span class="tier__meta">extends <code>JpaRepository&lt;T, Integer&gt;</code> · derived queries</span>
+          </div>
+          <div class="tier-conn"><span>persist / fetch</span></div>
+          <div class="tier">
+            <span class="tier__title">Model / Entity Layer — <code>@Entity</code></span>
+            <span class="tier__meta">student · course · professor · advisor · Rating</span>
+          </div>
+          <div class="tier-conn"><span>Hibernate / JDBC</span></div>
+          <div class="tier tier--data">
+            <span class="tier__title">MySQL 8</span>
+            <span class="tier__meta">database <code>yuplanner</code></span>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            eecs3311.app.yuplanner · package layout
+          </div>
+          <pre><code>eecs3311.app.yuplanner
+|-- YUPlannerApplication.java   <span class="tok-com">// @SpringBootApplication entry point, port 8080</span>
+|-- controller/                 <span class="tok-com">// @RestController REST endpoints</span>
+|-- service/                    <span class="tok-com">// business logic: interface + Impl</span>
+|-- repository/                  <span class="tok-com">// Spring Data JPA repositories</span>
++-- model/                      <span class="tok-com">// @Entity JPA domain objects</span></code></pre>
+        </div>
+
+        <table class="spec-table">
+          <thead><tr><th>Repository</th><th>Derived query method</th></tr></thead>
+          <tbody>
+            <tr><td>studentRepository</td><td>student findByUsernameAndPassword(String, String)</td></tr>
+            <tr><td>professorRepository</td><td>professor findByUsernameAndPassword(String, String)</td></tr>
+            <tr><td>courseRepository</td><td>course findByCourseCode(int)</td></tr>
+            <tr><td>RatingRepository</td><td>List&lt;Rating&gt; findByProfessor(professor)</td></tr>
+            <tr><td>advisorRepository</td><td>(none — inherited CRUD only)</td></tr>
+          </tbody>
+        </table>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            application.properties
+          </div>
+          <pre><code>spring.datasource.url=jdbc:mysql://localhost:3306/yuplanner
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
+        </div>
+      </div>
+
+      <!-- REST API -->
+      <div>
+        <h2>REST API Reference</h2>
+        <p>All endpoints are served at <code>http://localhost:8080</code>; request/response bodies are JSON. Each controller declares its own CORS policy.</p>
+
+        <table class="spec-table">
+          <thead><tr><th>Method</th><th>Path</th><th>Request</th><th>Response</th></tr></thead>
+          <tbody>
+            <tr><td>POST</td><td>/student/add</td><td>student JSON</td><td>"New student is added"</td></tr>
+            <tr><td>GET</td><td>/student/getAll</td><td>—</td><td>List&lt;student&gt;</td></tr>
+            <tr><td>POST</td><td>/student/find</td><td>username, password</td><td>matching student, or null</td></tr>
+            <tr><td>GET</td><td>/course/getAll</td><td>—</td><td>List&lt;course&gt;</td></tr>
+            <tr><td>GET</td><td>/course/get/{courseCode}</td><td>path: int</td><td>matching course</td></tr>
+            <tr><td>POST</td><td>/professor/find</td><td>username, password</td><td>matching professor, or null</td></tr>
+            <tr><td>GET</td><td>/advisor/getAll</td><td>—</td><td>List&lt;advisor&gt;</td></tr>
+            <tr><td>GET</td><td>/rating/professor-reviews/{id}</td><td>path: int</td><td>List&lt;Rating&gt; · 404 if absent</td></tr>
+            <tr><td>POST</td><td>/rating/add</td><td>Rating JSON</td><td>"New rating is added"</td></tr>
+            <tr><td>GET</td><td>/rating/average/{id}</td><td>path: int</td><td>double average · 404 if absent</td></tr>
+          </tbody>
+        </table>
+
+        <div class="fig-row">
+          <div class="code-block" style="margin-top:0;">
+            <div class="code-block__header"><span class="code-block__dot"></span>POST /student/find · request</div>
+            <pre><code>{ <span class="tok-str">"username"</span>: <span class="tok-str">"mhart"</span>,
+  <span class="tok-str">"password"</span>: <span class="tok-str">"password"</span> }</code></pre>
+          </div>
+          <div class="code-block" style="margin-top:0;">
+            <div class="code-block__header"><span class="code-block__dot"></span>200 OK · response (null if no match)</div>
+            <pre><code>{ <span class="tok-str">"id"</span>: 1, <span class="tok-str">"userid"</span>: 123456789,
+  <span class="tok-str">"firstname"</span>: <span class="tok-str">"Maya"</span>, <span class="tok-str">"lastname"</span>: <span class="tok-str">"Hart"</span>,
+  <span class="tok-str">"username"</span>: <span class="tok-str">"mhart"</span>,
+  <span class="tok-str">"courses"</span>: [<span class="tok-str">"EECS 3311"</span>] }</code></pre>
+          </div>
+        </div>
+
+        <p>Two representative flows — the stateless login credential lookup, and the average-rating fetch (which raises a 404 via <code>ResponseStatusException</code> when the professor or reviews are absent):</p>
+
+        <div class="wiring">
+          <svg viewBox="0 0 760 340" role="img" aria-label="Sequence diagram: student login credential lookup">
+            <defs>
+              <marker id="sq1-m" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L6.5,4 L0,8 Z" fill="#c7d0e6"/></marker>
+              <marker id="sq1-r" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L6.5,4 L0,8 Z" fill="#7f8db0"/></marker>
+            </defs>
+            <g font-family="monospace" text-anchor="middle">
+              <g fill="#111a35">
+                <rect x="14" y="8" width="122" height="34" rx="6" stroke="rgba(77,139,242,0.5)"/>
+                <rect x="164" y="8" width="132" height="34" rx="6" stroke="rgba(255,255,255,0.18)"/>
+                <rect x="312" y="8" width="126" height="34" rx="6" stroke="rgba(255,255,255,0.18)"/>
+                <rect x="456" y="8" width="132" height="34" rx="6" stroke="rgba(255,255,255,0.18)"/>
+                <rect x="628" y="8" width="112" height="34" rx="6" stroke="rgba(78,205,196,0.5)"/>
+              </g>
+              <g fill="#e9ecf5" font-size="10">
+                <text x="75" y="29">Login.js</text><text x="230" y="29">studentController</text><text x="375" y="29">studentService</text><text x="522" y="29">studentRepository</text><text x="684" y="29">MySQL</text>
+              </g>
+              <g stroke="rgba(255,255,255,0.15)" stroke-dasharray="3 4"><path d="M75,42 V320"/><path d="M230,42 V320"/><path d="M375,42 V320"/><path d="M522,42 V320"/><path d="M684,42 V320"/></g>
+            </g>
+            <g font-family="monospace" font-size="9">
+              <g stroke="#c7d0e6" stroke-width="1.4" fill="none" marker-end="url(#sq1-m)">
+                <path d="M75,74 H228"/><path d="M230,110 H373"/><path d="M375,146 H520"/><path d="M522,182 H682"/>
+              </g>
+              <g fill="#c7d0e6" text-anchor="middle">
+                <text x="152" y="68">POST /student/find {u, p}</text>
+                <text x="302" y="104">findStudent(student)</text>
+                <text x="448" y="140">findByUsernameAndPassword(u, p)</text>
+                <text x="600" y="176">SELECT … WHERE username=? AND password=?</text>
+              </g>
+              <g stroke="#7f8db0" stroke-width="1.4" fill="none" stroke-dasharray="5 4" marker-end="url(#sq1-r)">
+                <path d="M684,214 H524"/><path d="M522,246 H377"/><path d="M375,278 H232"/><path d="M230,310 H77"/>
+              </g>
+              <g fill="#8b97b0" text-anchor="middle">
+                <text x="600" y="209">row or ∅</text>
+                <text x="448" y="241">student or null</text>
+                <text x="302" y="273">student or null</text>
+                <text x="152" y="305">200 OK · JSON student (null if not found)</text>
+              </g>
+            </g>
+          </svg>
+          <div class="wiring__legend"><span>Sequence — student login / credential lookup</span></div>
+        </div>
+
+        <div class="wiring">
+          <svg viewBox="0 0 760 360" role="img" aria-label="Sequence diagram: fetching a professor's average rating">
+            <defs>
+              <marker id="sq2-m" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L6.5,4 L0,8 Z" fill="#c7d0e6"/></marker>
+              <marker id="sq2-r" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L6.5,4 L0,8 Z" fill="#7f8db0"/></marker>
+            </defs>
+            <g font-family="monospace" text-anchor="middle">
+              <g fill="#111a35">
+                <rect x="8" y="8" width="140" height="34" rx="6" stroke="rgba(77,139,242,0.5)"/>
+                <rect x="170" y="8" width="128" height="34" rx="6" stroke="rgba(255,255,255,0.18)"/>
+                <rect x="316" y="8" width="140" height="40" rx="6" stroke="rgba(255,255,255,0.18)"/>
+                <rect x="474" y="8" width="128" height="34" rx="6" stroke="rgba(255,255,255,0.18)"/>
+                <rect x="630" y="8" width="110" height="34" rx="6" stroke="rgba(78,205,196,0.5)"/>
+              </g>
+              <g fill="#e9ecf5" font-size="10">
+                <text x="78" y="29">StudentsReviews.js</text><text x="234" y="29">RatingController</text>
+                <text x="386" y="24">professorService /</text><text x="386" y="38">RatingService</text>
+                <text x="538" y="29">RatingRepository</text><text x="685" y="29">MySQL</text>
+              </g>
+              <g stroke="rgba(255,255,255,0.15)" stroke-dasharray="3 4"><path d="M78,48 V340"/><path d="M234,48 V340"/><path d="M386,48 V340"/><path d="M538,48 V340"/><path d="M685,48 V340"/></g>
+            </g>
+            <g font-family="monospace" font-size="9">
+              <g stroke="#c7d0e6" stroke-width="1.4" fill="none" marker-end="url(#sq2-m)">
+                <path d="M78,80 H232"/><path d="M234,116 H384"/><path d="M386,152 H536"/><path d="M538,188 H683"/>
+              </g>
+              <g fill="#c7d0e6" text-anchor="middle">
+                <text x="155" y="74">GET /rating/average/{professorId}</text>
+                <text x="310" y="110">findProfessorById(id)</text>
+                <text x="462" y="146">findByProfessor(professor)</text>
+                <text x="610" y="182">SELECT * FROM rating WHERE professor_id=?</text>
+              </g>
+              <g stroke="#7f8db0" stroke-width="1.4" fill="none" stroke-dasharray="5 4" marker-end="url(#sq2-r)">
+                <path d="M683,220 H540"/><path d="M538,252 H388"/>
+              </g>
+              <g fill="#8b97b0" text-anchor="middle">
+                <text x="610" y="215">List&lt;Rating&gt;</text><text x="462" y="247">List&lt;Rating&gt;</text>
+              </g>
+              <path d="M388,272 H430 V292 H388" stroke="#c7d0e6" stroke-width="1.4" fill="none" marker-end="url(#sq2-m)"/>
+              <text x="434" y="286" fill="#8b97b0" text-anchor="start">compute average (Java stream)</text>
+              <g stroke="#7f8db0" stroke-width="1.4" fill="none" stroke-dasharray="5 4" marker-end="url(#sq2-r)">
+                <path d="M386,318 H236"/><path d="M234,344 H80"/>
+              </g>
+              <g fill="#8b97b0" text-anchor="middle"><text x="310" y="313">double average</text><text x="155" y="339">200 OK · average rating</text></g>
+              <rect x="150" y="248" width="120" height="42" rx="5" fill="rgba(227,24,55,0.08)" stroke="#E31837" stroke-dasharray="4 3"/>
+              <text x="210" y="266" fill="#e8778a" font-size="8" text-anchor="middle">404 if professor /</text>
+              <text x="210" y="278" fill="#e8778a" font-size="8" text-anchor="middle">reviews absent</text>
+              <text x="210" y="287" fill="#e8778a" font-size="7" text-anchor="middle">(ResponseStatusException)</text>
+            </g>
+          </svg>
+          <div class="wiring__legend"><span>Sequence — fetch a professor's average rating</span></div>
+        </div>
+
+        <p style="font-size:0.85rem;color:var(--muted);">Authentication is a stateless credential lookup — the SPA posts a username/password to <code>/student/find</code> or <code>/professor/find</code> and receives the matching record (or null). There is no token, session, or password hashing (see Limitations).</p>
+      </div>
+
+      <!-- Data model -->
+      <div>
+        <h2>Data Model &amp; Database</h2>
+        <p>The domain is modelled by five JPA entities, each mapped to a MySQL table. The only database-enforced association is <code>Rating → professor</code> (<code>@ManyToOne</code>); every other cross-reference is stored as a plain string rather than a foreign key.</p>
+
+        <div class="wiring">
+          <svg viewBox="0 0 760 430" role="img" aria-label="Entity-relationship diagram of the five YUPlanner entities">
+            <defs>
+              <marker id="er-fk" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L8,5 L0,10 Z" fill="#E31837"/></marker>
+            </defs>
+            <g font-family="monospace">
+              <!-- student -->
+              <rect x="24" y="34" width="160" height="132" rx="6" fill="#111a35" stroke="rgba(255,255,255,0.18)"/>
+              <text x="104" y="52" fill="#e9ecf5" font-size="11" font-weight="600" text-anchor="middle">student</text>
+              <line x1="24" y1="60" x2="184" y2="60" stroke="rgba(255,255,255,0.14)"/>
+              <g fill="#8fa0bd" font-size="9"><text x="34" y="76">id : int PK</text><text x="34" y="90">studentid : int</text><text x="34" y="104">firstname, lastname</text><text x="34" y="118">username, password</text><text x="34" y="132">courses : List&lt;String&gt;</text></g>
+
+              <!-- course -->
+              <rect x="300" y="24" width="170" height="152" rx="6" fill="#111a35" stroke="rgba(255,255,255,0.18)"/>
+              <text x="385" y="42" fill="#e9ecf5" font-size="11" font-weight="600" text-anchor="middle">course</text>
+              <line x1="300" y1="50" x2="470" y2="50" stroke="rgba(255,255,255,0.14)"/>
+              <g fill="#8fa0bd" font-size="9"><text x="310" y="66">id : int PK</text><text x="310" y="80">coursecode : int</text><text x="310" y="94">dept, coursename</text><text x="310" y="108">courseday, coursetime</text><text x="310" y="122">term, type, campus</text><text x="310" y="136">location, prerequisites</text><text x="310" y="150">courseinstructor</text></g>
+
+              <!-- advisor -->
+              <rect x="24" y="256" width="160" height="120" rx="6" fill="#111a35" stroke="rgba(255,255,255,0.18)"/>
+              <text x="104" y="274" fill="#e9ecf5" font-size="11" font-weight="600" text-anchor="middle">advisor</text>
+              <line x1="24" y1="282" x2="184" y2="282" stroke="rgba(255,255,255,0.14)"/>
+              <g fill="#8fa0bd" font-size="9"><text x="34" y="298">id : int PK</text><text x="34" y="312">employeeid : int</text><text x="34" y="326">firstname, lastname</text><text x="34" y="340">username, password</text><text x="34" y="354">students : String</text></g>
+
+              <!-- professor -->
+              <rect x="300" y="256" width="160" height="120" rx="6" fill="#111a35" stroke="rgba(255,255,255,0.18)"/>
+              <text x="380" y="274" fill="#e9ecf5" font-size="11" font-weight="600" text-anchor="middle">professor</text>
+              <line x1="300" y1="282" x2="460" y2="282" stroke="rgba(255,255,255,0.14)"/>
+              <g fill="#8fa0bd" font-size="9"><text x="310" y="298">id : int PK</text><text x="310" y="312">employeeid : int</text><text x="310" y="326">firstname, lastname</text><text x="310" y="340">username, password</text><text x="310" y="354">courses : String</text></g>
+
+              <!-- Rating -->
+              <rect x="546" y="256" width="196" height="120" rx="6" fill="#1a1226" stroke="rgba(227,24,55,0.45)"/>
+              <text x="644" y="274" fill="#e9ecf5" font-size="11" font-weight="600" text-anchor="middle">Rating</text>
+              <line x1="546" y1="282" x2="742" y2="282" stroke="rgba(255,255,255,0.14)"/>
+              <g fill="#8fa0bd" font-size="9"><text x="556" y="298">id : int PK</text><text x="556" y="312" fill="#e8778a">professor_id : int FK</text><text x="556" y="326">rating : double</text><text x="556" y="340">review : varchar(500)</text><text x="556" y="354">studentName : String</text></g>
+
+              <!-- enforced FK Rating -> professor -->
+              <path d="M546,316 H462" stroke="#E31837" stroke-width="1.8" fill="none" marker-end="url(#er-fk)"/>
+              <text x="504" y="310" fill="#e8778a" font-size="8.5" text-anchor="middle">@ManyToOne</text>
+              <text x="504" y="330" fill="#8b97b0" font-size="8.5" text-anchor="middle">*        1</text>
+
+              <!-- soft links (dashed) -->
+              <g stroke="#586179" stroke-width="1" stroke-dasharray="4 4" fill="none">
+                <path d="M184,100 H300"/>
+                <path d="M104,166 V256"/>
+                <path d="M385,176 V256"/>
+                <path d="M184,316 H300"/>
+              </g>
+            </g>
+            <g font-family="monospace" font-size="9">
+              <rect x="230" y="392" width="300" height="26" rx="5" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)"/>
+              <text x="244" y="409" fill="#e8778a">→</text><text x="256" y="409" fill="#8fa0bd">enforced FK (@ManyToOne)</text>
+              <text x="410" y="409" fill="#586179">- - -</text><text x="440" y="409" fill="#8fa0bd">soft link (string)</text>
+            </g>
+          </svg>
+        </div>
+
+        <table class="spec-table">
+          <thead><tr><th>Entity</th><th>Key fields</th><th>Seed rows</th></tr></thead>
+          <tbody>
+            <tr><td>student</td><td>id PK · studentid · name · username/password · courses : List&lt;String&gt; (@ElementCollection)</td><td>5</td></tr>
+            <tr><td>course</td><td>id PK · courseCode · dept · coursename · day/time/duration · term/section/type · campus · prerequisites · instructor</td><td>6</td></tr>
+            <tr><td>professor</td><td>id PK · employeeid · name · username/password · courses : String</td><td>4</td></tr>
+            <tr><td>advisor</td><td>id PK · employeeid · name · username/password · students : String</td><td>4</td></tr>
+            <tr><td>Rating</td><td>id PK · professor (@ManyToOne, @JoinColumn professor_id) · rating : double · review : varchar(500) · studentName</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.85rem;color:var(--muted);">All other conceptual links — a student's courses, a professor's courses, an advisor's students — are stored as human-readable strings, so they are neither validated nor joined by the database.</p>
+      </div>
+
+      <!-- Frontend -->
+      <div>
+        <h2>Frontend Design</h2>
+        <p>The frontend is a React 18 SPA scaffolded with Create React App. The root <code>App.js</code> wraps the tree in a <code>&lt;UserProvider&gt;</code> (React Context) and a <code>&lt;BrowserRouter&gt;</code>, then declares all client-side routes. Cross-cutting user state (identity + role) is shared through Context rather than prop-drilling.</p>
+
+        <div class="wiring">
+          <svg viewBox="0 0 760 330" role="img" aria-label="Frontend component and route tree grouped by role">
+            <defs>
+              <marker id="ft-a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L6.5,4 L0,8 Z" fill="#7f8db0"/></marker>
+            </defs>
+            <g font-family="monospace">
+              <rect x="238" y="16" width="180" height="46" rx="8" fill="#111a35" stroke="rgba(77,139,242,0.5)"/>
+              <text x="328" y="37" fill="#e9ecf5" font-size="12" font-weight="600" text-anchor="middle">App.js</text>
+              <text x="328" y="52" fill="#8b97b0" font-size="8" text-anchor="middle">&lt;UserProvider&gt; · &lt;BrowserRouter&gt; · &lt;Routes&gt;</text>
+
+              <rect x="470" y="16" width="170" height="46" rx="8" fill="#0f1c3f" stroke="rgba(255,255,255,0.18)"/>
+              <text x="555" y="37" fill="#7aa9f5" font-size="11" font-weight="600" text-anchor="middle">UserContext.js</text>
+              <text x="555" y="52" fill="#8b97b0" font-size="8" text-anchor="middle">global user state (Context API)</text>
+              <path d="M418,39 H468" stroke="#7f8db0" stroke-width="1.4" fill="none" marker-end="url(#ft-a)"/>
+
+              <!-- role groups -->
+              <g>
+                <rect x="20" y="120" width="150" height="70" rx="7" fill="#111a35" stroke="rgba(255,255,255,0.18)"/>
+                <text x="95" y="138" fill="#e9ecf5" font-size="10" font-weight="600" text-anchor="middle">Public</text>
+                <g fill="#8fa0bd" font-size="8"><text x="30" y="154">/login · Login</text><text x="30" y="167">/signup · Signup</text></g>
+
+                <rect x="190" y="120" width="170" height="110" rx="7" fill="#111a35" stroke="rgba(107,212,160,0.4)"/>
+                <text x="275" y="138" fill="#6bd4a0" font-size="10" font-weight="600" text-anchor="middle">Student</text>
+                <g fill="#8fa0bd" font-size="8"><text x="200" y="153">/student-profile</text><text x="200" y="166">· SearchCourses</text><text x="200" y="179">· DropCourse · YourProgress</text><text x="200" y="192">· ViewFullSchedule</text><text x="200" y="205">· CourseDetails/:id</text></g>
+
+                <rect x="380" y="120" width="170" height="110" rx="7" fill="#111a35" stroke="rgba(247,127,0,0.4)"/>
+                <text x="465" y="138" fill="#f7a94a" font-size="10" font-weight="600" text-anchor="middle">Professor</text>
+                <g fill="#8fa0bd" font-size="8"><text x="390" y="153">/professor-profile</text><text x="390" y="166">· ManageCourses</text><text x="390" y="179">· EditProfessorProfile</text><text x="390" y="192">· StudentsReviews</text></g>
+
+                <rect x="570" y="120" width="170" height="110" rx="7" fill="#111a35" stroke="rgba(227,24,55,0.4)"/>
+                <text x="655" y="138" fill="#e8778a" font-size="10" font-weight="600" text-anchor="middle">Advisor</text>
+                <g fill="#8fa0bd" font-size="8"><text x="580" y="153">/advisor-profile</text><text x="580" y="166">· AdvisorViewCourses</text><text x="580" y="179">· AdvisorViewStudents</text></g>
+              </g>
+              <g stroke="#7f8db0" stroke-width="1.2" fill="none" marker-end="url(#ft-a)">
+                <path d="M300,62 Q120,90 95,118"/><path d="M320,62 Q270,90 275,118"/><path d="M336,62 Q430,90 465,118"/><path d="M356,62 Q620,88 655,118"/>
+              </g>
+
+              <!-- shared band -->
+              <rect x="20" y="262" width="720" height="52" rx="8" fill="#0f1c3f" stroke="rgba(77,139,242,0.25)"/>
+              <text x="380" y="282" fill="#e9ecf5" font-size="10" font-weight="600" text-anchor="middle">Shared components</text>
+              <text x="380" y="298" fill="#8b97b0" font-size="8.5" text-anchor="middle">AppBar · Sidebar / ProfessorSidebar / AdvisorSidebar · AddCourseModal · EditCourseModal · ManageCoursesTable · Login&amp;Signup fields · buttons</text>
+              <g stroke="#7f8db0" stroke-width="1.2" fill="none" marker-end="url(#ft-a)"><path d="M275,230 V260"/><path d="M465,230 V260"/></g>
+            </g>
+          </svg>
+        </div>
+
+        <table class="spec-table">
+          <thead><tr><th>Route</th><th>Component / purpose</th></tr></thead>
+          <tbody>
+            <tr><td>/login · /signup</td><td>Login / Signup — authentication</td></tr>
+            <tr><td>/student-profile</td><td>StudentProfile — student dashboard</td></tr>
+            <tr><td>/student-profile/search-courses</td><td>SearchCourses — browse / filter catalogue</td></tr>
+            <tr><td>/student-profile/view-schedule</td><td>ViewFullSchedule — weekly schedule</td></tr>
+            <tr><td>/professor-profile</td><td>ProfessorProfile + ManageCourses / StudentsReviews</td></tr>
+            <tr><td>/advisor-profile</td><td>AdvisorProfile + AdvisorViewCourses / ViewStudents</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.85rem;color:var(--muted);"><code>UserContext</code> stores the authenticated user + role after login. Components reach the API at <code>localhost:8080</code> via Axios and Fetch; the schedule view uses jsPDF (with autotable / html2canvas) to export a downloadable weekly timetable.</p>
+
+        <h3 style="font-size:1.05rem;margin:22px 0 4px;">UI mockups</h3>
+        <p>The UI uses York University's brand red (<code>#E31837</code>) as the primary accent, most visibly on the login screen.</p>
+        <div class="mockup-row">
+          <div>
+            <div class="mockup">
+              <div class="mockup__chrome"><i></i><i></i><i></i><span class="mockup__url">localhost:3000/login</span></div>
+              <div class="mockup-login">
+                <div class="mockup-login__card">
+                  <div class="mockup-login__brand">YUPlanner</div>
+                  <div class="mockup-login__field">username</div>
+                  <div class="mockup-login__field">password</div>
+                  <div class="mockup-login__btn">LOGIN</div>
+                  <div class="mockup-login__link">Create account</div>
+                </div>
+              </div>
+            </div>
+            <p class="mockup__cap">(a) Login screen</p>
+          </div>
+          <div>
+            <div class="mockup">
+              <div class="mockup__chrome"><i></i><i></i><i></i><span class="mockup__url">localhost:3000/student-profile</span></div>
+              <div class="mockup-dash">
+                <div class="mockup-dash__bar"><b>YUPlanner</b> <span>· Student Dashboard</span></div>
+                <div class="mockup-dash__body">
+                  <div class="mockup-dash__side">
+                    <span>Search Courses</span><span>Drop Course</span><span>Your Progress</span><span>View Schedule</span><span>Sign Out</span>
+                  </div>
+                  <div class="mockup-dash__main">
+                    <div class="mockup-dash__h">Weekly Schedule</div>
+                    <div class="mockup-dash__grid">
+                      <div></div><div></div><div></div><div></div>
+                      <div class="ev1"></div><div></div><div></div><div></div>
+                      <div></div><div></div><div class="ev2"></div><div></div>
+                      <div></div><div></div><div></div><div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="mockup__cap">(b) Student dashboard</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Setup -->
+      <div>
+        <h2>Setup, Build &amp; Deployment</h2>
+        <p>Prerequisites: Java 17 + Maven (wrapper included), MySQL 8.0.40 on <code>localhost:3306</code>, and Node.js 22.11 LTS with npm 10.9.</p>
+        <div class="code-block">
+          <div class="code-block__header"><span class="code-block__dot"></span>run locally</div>
+          <pre><code><span class="tok-com"># 1 · seed the database</span>
+mysql -u root -p &lt; backend/db/yuplanner.sql
+
+<span class="tok-com"># 2 · backend → http://localhost:8080</span>
+cd backend/yuplanner &amp;&amp; mvn spring-boot:run
+
+<span class="tok-com"># 3 · frontend → http://localhost:3000</span>
+cd frontend/yuplanner &amp;&amp; npm install &amp;&amp; npm start</code></pre>
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>Component</th><th>Port</th><th>URL</th></tr></thead>
+          <tbody>
+            <tr><td>React SPA (CRA dev server)</td><td>3000</td><td>http://localhost:3000</td></tr>
+            <tr><td>Spring Boot REST API</td><td>8080</td><td>http://localhost:8080</td></tr>
+            <tr><td>MySQL</td><td>3306</td><td>jdbc:mysql://localhost:3306/yuplanner</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Limitations -->
+      <div>
+        <h2>Known Limitations &amp; Future Work</h2>
+        <p>Characteristic of an educational, sprint-scoped project — not broken features, but the items that matter most for security, correctness and maintainability.</p>
+        <div class="future-grid">
+          <div class="future-card">
+            <h3>Security</h3>
+            <ul>
+              <li>Passwords stored / compared in plaintext → hash with BCrypt</li>
+              <li>No Spring Security, tokens or sessions → add JWT auth + login filter</li>
+              <li>No role-based access control → restrict actions by role</li>
+              <li>Permissive CORS &amp; login returns the full record → tighten + return a DTO</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Data Model</h3>
+            <ul>
+              <li>String-based associations → model as proper JPA relations</li>
+              <li>Column-name divergence (studentid/employeeid vs userid)</li>
+              <li>ddl-auto=update everywhere → versioned migrations (Flyway)</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>API Surface</h3>
+            <ul>
+              <li>Commented-out course /find, update, delete handlers → implement or remove</li>
+              <li>String responses ("New course is added") → typed JSON + status codes</li>
+              <li>Inconsistent error handling → standardise across controllers</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Tooling</h3>
+            <ul>
+              <li>No containerisation → docker-compose for DB + backend + frontend</li>
+              <li>No CI/CD → GitHub Actions build/test on PRs</li>
+              <li>Lowercase class names → adopt Java PascalCase</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="project-links">
-        <a href="#" class="btn">View on GitHub</a>
-        <a href="#" class="btn btn--ghost">Live Demo</a>
+        <a href="#" class="btn" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        <a href="https://www.youtube.com/watch?v=25Xqdr13NMs" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Sprint 1 Demo</a>
+        <a href="https://youtu.be/3GhPyGNPRdU" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Sprint 2 Demo</a>
       </div>
+
     </div>
   </div>
 

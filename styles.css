@@ -1129,6 +1129,528 @@ main {
 .vga-scanline .vga-sync   { flex: 1.5; background: rgba(247, 127, 0, 0.2); color: var(--accent); }
 .vga-scanline .vga-bp     { flex: 1; background: rgba(255, 255, 255, 0.04); color: var(--muted); }
 
+/* ── Pipeline execution timing chart (project 3) ── */
+.pipe-chart {
+  margin-top: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.pipe-chart__grid {
+  display: grid;
+  gap: 4px;
+  min-width: 560px;
+}
+
+.pipe-chart__cell {
+  padding: 8px 4px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-family: "Courier New", Courier, monospace;
+  color: #0b0b0b;
+  white-space: nowrap;
+}
+
+.pipe-chart__head {
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 4px 2px;
+}
+
+.pipe-chart__label {
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: "Courier New", Courier, monospace;
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.pipe-chart__cell--if  { background: #4ecdc4; }
+.pipe-chart__cell--id  { background: #6bd4a0; }
+.pipe-chart__cell--ex  { background: #f7b267; }
+.pipe-chart__cell--mem { background: #f79d65; }
+.pipe-chart__cell--wb  { background: #f4845f; }
+
+.pipe-chart__cell--bubble {
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.06), rgba(255,255,255,0.06) 4px, transparent 4px, transparent 8px);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  color: var(--muted);
+}
+
+.pipe-chart__cell--squash {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(247, 127, 0, 0.5);
+  color: var(--accent);
+}
+
+.pipe-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.pipe-chart__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pipe-chart__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── Hazard-unit decision-flow diagram (project 3) ── */
+.hazard-flow {
+  margin-top: 14px;
+  display: grid;
+  gap: 14px;
+}
+
+.hazard-flow__node {
+  background: var(--panel);
+  border: 2px solid var(--accent-2);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.hazard-flow__node strong { font-size: 0.95rem; }
+
+.hazard-flow__node span {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.hazard-flow__branches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.hazard-flow__action {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 3px solid var(--muted);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+.hazard-flow__action h4 {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.hazard-flow__action p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.hazard-flow__action--forward { border-top-color: var(--accent-2); }
+.hazard-flow__action--forward h4 { color: var(--accent-2); }
+.hazard-flow__action--stall { border-top-color: #f7b267; }
+.hazard-flow__action--stall h4 { color: #f7b267; }
+.hazard-flow__action--flush { border-top-color: var(--accent); }
+.hazard-flow__action--flush h4 { color: var(--accent); }
+
+/* ── Comparison bar chart (project 4) ── */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 48px;
+  height: 220px;
+  margin-top: 16px;
+  padding: 16px 16px 0;
+  background: linear-gradient(180deg, rgba(8, 14, 30, 0.5), rgba(11, 19, 43, 0.3));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  position: relative;
+}
+
+.bar-chart__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  width: 96px;
+}
+
+.bar-chart__bar {
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+  position: relative;
+  min-height: 4px;
+  transition: height 0.3s ease;
+}
+
+.bar-chart__bar--a { background: linear-gradient(180deg, var(--accent-2), rgba(78, 205, 196, 0.4)); }
+.bar-chart__bar--b { background: linear-gradient(180deg, var(--accent), rgba(247, 127, 0, 0.4)); }
+
+.bar-chart__value {
+  position: absolute;
+  top: -22px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  font-family: "Courier New", Courier, monospace;
+}
+
+.bar-chart__label {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.bar-chart__delta {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  background: rgba(11, 19, 43, 0.85);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(78, 205, 196, 0.3);
+}
+
+/* ── Signoff pass badges (project 4) ── */
+.signoff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.signoff-card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid #4ecdc4;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.signoff-card__badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(78, 205, 196, 0.15);
+  color: #4ecdc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.signoff-card__title { font-weight: 600; font-size: 0.9rem; }
+.signoff-card__sub { font-size: 0.76rem; color: var(--muted); margin-top: 1px; }
+
+/* ── Tool-screenshot figures (project 4) ── */
+.project-figure {
+  margin: 14px 0 0;
+}
+
+.project-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #05070f;
+}
+
+.project-figure figcaption {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 6px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.fig-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+  align-items: start;
+}
+
+.fig-row .project-figure { margin-top: 0; }
+
+/* stack figures in one column instead of side-by-side */
+.fig-row--col { grid-template-columns: 1fr; }
+
+/* render a figure at a smaller, natural size (centered) */
+.project-figure--sm img { max-width: 400px; margin-inline: auto; }
+
+/* ── Tier stack (project 5: 3-tier arch + backend layers) ── */
+.tier-stack {
+  display: grid;
+  gap: 0;
+  margin-top: 16px;
+}
+
+.tier {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 4px solid var(--muted);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  text-align: center;
+}
+
+.tier__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.tier__meta {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.tier__meta code {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.tier--client { border-left-color: #4d8bf2; }
+.tier--client .tier__title { color: #7aa9f5; }
+.tier--server { border-left-color: #6bd4a0; }
+.tier--server .tier__title { color: #6bd4a0; }
+.tier--orm { border-left-color: var(--accent); }
+.tier--orm .tier__title { color: var(--accent); }
+.tier--data {
+  border-left-color: var(--accent-2);
+  background: var(--panel);
+  max-width: 340px;
+  margin: 0 auto;
+}
+.tier--data .tier__title { color: var(--accent-2); }
+
+.tier-conn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 0;
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.tier-conn::before {
+  content: '';
+  width: 2px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tier-conn::after {
+  content: '▼';
+  font-size: 0.6rem;
+  color: var(--muted);
+  margin-top: -2px;
+}
+
+.tier-conn span { margin-top: 2px; }
+
+/* ── Low-fidelity UI mockups (project 5) — York red #E31837 ── */
+.mockup-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.mockup {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.mockup__chrome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: #d7dae0;
+}
+
+.mockup__chrome i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #b8bcc4;
+  flex-shrink: 0;
+}
+
+.mockup__url {
+  font-size: 0.66rem;
+  color: #5a6270;
+  font-family: "Courier New", Courier, monospace;
+  margin-left: 4px;
+}
+
+.mockup__cap {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* login mockup */
+.mockup-login {
+  background: #E31837;
+  padding: 26px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 210px;
+}
+
+.mockup-login__card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 18px 20px;
+  width: 100%;
+  max-width: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.mockup-login__brand {
+  color: #E31837;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.mockup-login__field {
+  width: 100%;
+  height: 26px;
+  border-radius: 4px;
+  background: #eef0f3;
+  border: 1px solid #d3d7de;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 0.68rem;
+  color: #8a92a0;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.mockup-login__btn {
+  width: 100%;
+  height: 28px;
+  border-radius: 4px;
+  background: #E31837;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.mockup-login__link { font-size: 0.66rem; color: #6b7280; }
+
+/* dashboard mockup */
+.mockup-dash { display: flex; flex-direction: column; min-height: 210px; }
+
+.mockup-dash__bar {
+  background: #1f2a44;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+.mockup-dash__bar b { color: #fff; }
+.mockup-dash__bar span { color: #aab3c5; font-weight: 400; }
+
+.mockup-dash__body { display: flex; flex: 1; }
+
+.mockup-dash__side {
+  background: #E31837;
+  color: #fff;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.66rem;
+  min-width: 104px;
+}
+
+.mockup-dash__main {
+  flex: 1;
+  padding: 12px;
+  background: #fff;
+}
+
+.mockup-dash__h {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #1f2a44;
+  margin-bottom: 8px;
+}
+
+.mockup-dash__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 20px);
+  gap: 3px;
+}
+
+.mockup-dash__grid div {
+  border: 1px solid #e2e5ea;
+  border-radius: 2px;
+}
+
+.mockup-dash__grid .ev1 { background: rgba(107, 212, 160, 0.55); border-color: #6bd4a0; }
+.mockup-dash__grid .ev2 { background: rgba(77, 139, 242, 0.4); border-color: #4d8bf2; }
+
 @media (max-width: 640px) {
   .nav {
     flex-wrap: wrap;

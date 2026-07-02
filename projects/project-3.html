@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Three — Salwan Aldhahab</title>
+  <title>Pipelined RV32I RISC-V Core — Salwan Aldhahab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
         <img src="../images/profile.jpg" alt="Salwan Aldhahab headshot">
         <div class="logo__text">
           <span class="logo__name">Salwan Aldhahab</span>
-          <span class="logo__subtitle">Hardware & Software Engineer</span>
+          <span class="logo__subtitle">Hardware &amp; Software Engineer</span>
         </div>
       </div>
       <nav class="nav">
@@ -30,38 +30,608 @@
   </header>
 
   <div class="project-page">
+
     <div class="project-hero">
       <a href="../index.html#projects" class="back-link">← Back to projects</a>
-      <p class="eyebrow">Project 03 · Category</p>
-      <h1>Project Three</h1>
-      <p class="lede">A concise one-liner describing what this project does and why it matters.</p>
+      <p class="eyebrow">Project 03 · Computer Architecture</p>
+      <h1>Pipelined RV32I RISC-V Core</h1>
+      <p class="lede">A fully-pipelined, five-stage, in-order RV32I RISC-V core written in SystemVerilog. A dedicated hazard unit sustains near one-instruction-per-cycle throughput through data forwarding, load–use and write–decode stalls, and control-flow flushes — verified end-to-end against the full rv32-bmarks suite.</p>
       <ul class="pill-list">
-        <li>Tool A</li>
-        <li>Tool B</li>
-        <li>Tool C</li>
+        <li>SystemVerilog</li>
+        <li>RV32I</li>
+        <li>5-stage pipeline</li>
+        <li>Forwarding / Stall / Flush</li>
+        <li>ModelSim / Verilator</li>
+        <li>rv32-bmarks</li>
       </ul>
+      <p class="eyebrow">EECS 4201 · York University — Computer Architecture &amp; Organization · final deliverable (PD5)</p>
+    </div>
+
+    <!-- Animated pipeline hero -->
+    <div class="pipeline-hero" aria-hidden="true">
+      <div class="pipeline-hero__stage">IF<span>Fetch</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">ID<span>Decode</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">EX<span>Execute</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">MEM<span>Memory</span></div>
+      <span class="pipeline-hero__sep">▸</span>
+      <div class="pipeline-hero__stage">WB<span>Write-back</span></div>
     </div>
 
     <div class="section project-body">
+
+      <!-- System Overview -->
       <div>
-        <h2>Overview</h2>
-        <p>Describe the project at a high level. What is it, what does it do, and why did you build it? Give the reader enough context to understand the rest of the page.</p>
+        <h2>System Overview</h2>
+        <p>This is the culmination (PD5) of an incremental course project that builds a RISC-V processor across successive deliverables. It reuses the datapath blocks proven in the single-cycle design and transforms them into a genuine five-stage pipeline. The essential new engineering is not the arithmetic or decoding — those are inherited — but the machinery that makes a pipeline behave correctly under hazards: the pipeline registers that decouple the stages, the forwarding network that resolves most data dependencies with no penalty, the stall logic for the dependencies forwarding cannot cover, and the flush logic that discards wrongly-fetched instructions after control-flow changes.</p>
+        <p>Three classes of hazard can corrupt results in a pipeline. <strong>Structural</strong> hazards are avoided by design (separate instruction/data memory ports, and a register file that writes and reads in the same cycle). <strong>Data</strong> hazards are resolved by forwarding, with stalls for the rest. <strong>Control</strong> hazards are handled by fetching sequentially and flushing on taken branches and jumps.</p>
+
+        <div class="metric-grid">
+          <div class="metric"><span class="metric__value">RV32I</span><span class="metric__label">Base ISA</span></div>
+          <div class="metric"><span class="metric__value">5</span><span class="metric__label">Pipeline stages</span></div>
+          <div class="metric"><span class="metric__value">2</span><span class="metric__label">Forwarding paths</span></div>
+          <div class="metric"><span class="metric__value">1-cycle</span><span class="metric__label">Stall penalty</span></div>
+          <div class="metric"><span class="metric__value">1 MiB</span><span class="metric__label">Flat memory</span></div>
+          <div class="metric"><span class="metric__value">64/64</span><span class="metric__label">Tests pass</span></div>
+        </div>
       </div>
 
+      <!-- Architecture -->
       <div>
-        <h2>What I built</h2>
-        <p>Go into more detail about the system or feature you designed. What were the key technical decisions? What constraints did you work within?</p>
+        <h2>Architecture — Five-Stage Datapath</h2>
+        <p>The top-level <code>pd5</code> module wires together the five stages, the two memory instances, the register file, the four pipeline registers, and the hazard unit. Solid paths are the normal per-cycle dataflow; the dashed feedback paths are forwarding from the <code>EX/MEM</code> (MX) and <code>MEM/WB</code> (WX) pipeline registers back into Execute.</p>
+
+        <div class="wiring">
+          <svg viewBox="0 0 920 300" role="img" aria-label="Five-stage datapath with MX and WX forwarding paths into Execute">
+            <!-- forwarding feedback paths (dashed) -->
+            <path d="M394,105 C394,60 300,60 300,103" fill="none" stroke="#4ecdc4" stroke-width="2" stroke-dasharray="5 4"/>
+            <path d="M524,105 C524,35 292,35 292,103" fill="none" stroke="#f77f00" stroke-width="2" stroke-dasharray="5 4"/>
+            <text x="345" y="52" fill="#4ecdc4" font-size="11" text-anchor="middle" font-family="monospace">MX forward</text>
+            <text x="360" y="27" fill="#f77f00" font-size="11" text-anchor="middle" font-family="monospace">WX forward</text>
+
+            <!-- stage boxes -->
+            <g font-family="monospace" text-anchor="middle">
+              <rect x="20"  y="105" width="100" height="52" rx="7" fill="#111a35" stroke="rgba(78,205,196,0.5)"/>
+              <text x="70"  y="128" fill="#e6e9f0" font-size="13" font-weight="600">IF</text>
+              <text x="70"  y="145" fill="#6b7a99" font-size="9">fetch</text>
+
+              <rect x="150" y="105" width="100" height="52" rx="7" fill="#111a35" stroke="rgba(255,255,255,0.18)"/>
+              <text x="200" y="128" fill="#e6e9f0" font-size="13" font-weight="600">ID</text>
+              <text x="200" y="145" fill="#6b7a99" font-size="9">decode</text>
+
+              <rect x="280" y="105" width="100" height="52" rx="7" fill="#1a2340" stroke="rgba(247,127,0,0.55)"/>
+              <text x="330" y="128" fill="#e6e9f0" font-size="13" font-weight="600">EX</text>
+              <text x="330" y="145" fill="#6b7a99" font-size="9">ALU · branch</text>
+
+              <rect x="410" y="105" width="100" height="52" rx="7" fill="#111a35" stroke="rgba(255,255,255,0.18)"/>
+              <text x="460" y="128" fill="#e6e9f0" font-size="13" font-weight="600">MEM</text>
+              <text x="460" y="145" fill="#6b7a99" font-size="9">data mem</text>
+
+              <rect x="540" y="105" width="100" height="52" rx="7" fill="#111a35" stroke="rgba(78,205,196,0.5)"/>
+              <text x="590" y="128" fill="#e6e9f0" font-size="13" font-weight="600">WB</text>
+              <text x="590" y="145" fill="#6b7a99" font-size="9">write-back</text>
+            </g>
+
+            <!-- pipeline register bars -->
+            <g fill="rgba(247,183,103,0.25)" stroke="rgba(247,183,103,0.7)">
+              <rect x="126" y="98" width="18" height="66" rx="2"/>
+              <rect x="256" y="98" width="18" height="66" rx="2"/>
+              <rect x="386" y="98" width="18" height="66" rx="2"/>
+              <rect x="516" y="98" width="18" height="66" rx="2"/>
+            </g>
+            <g font-family="monospace" font-size="8" fill="#94a2c4" text-anchor="middle">
+              <text x="135" y="178">IF/ID</text>
+              <text x="265" y="178">ID/EX</text>
+              <text x="395" y="178">EX/MEM</text>
+              <text x="525" y="178">MEM/WB</text>
+            </g>
+
+            <!-- forward arrows between stages -->
+            <g stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none">
+              <path d="M120,131 H126"/><path d="M144,131 H150"/>
+              <path d="M250,131 H256"/><path d="M274,131 H280"/>
+              <path d="M380,131 H386"/><path d="M404,131 H410"/>
+              <path d="M510,131 H516"/><path d="M534,131 H540"/>
+            </g>
+
+            <!-- support blocks -->
+            <g font-family="monospace" text-anchor="middle">
+              <rect x="20"  y="30" width="100" height="40" rx="6" fill="#0f1c3f" stroke="rgba(255,255,255,0.14)"/>
+              <text x="70"  y="54" fill="#94a2c4" font-size="10">Instr. Memory</text>
+              <path d="M70,70 V105" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+
+              <rect x="150" y="215" width="100" height="42" rx="6" fill="#0f1c3f" stroke="rgba(255,255,255,0.14)"/>
+              <text x="200" y="240" fill="#94a2c4" font-size="10">Register File</text>
+              <path d="M200,215 V157" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+
+              <rect x="410" y="215" width="100" height="42" rx="6" fill="#0f1c3f" stroke="rgba(255,255,255,0.14)"/>
+              <text x="460" y="240" fill="#94a2c4" font-size="10">Data Memory</text>
+              <path d="M460,215 V157" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+            </g>
+          </svg>
+          <div class="wiring__legend">
+            <span><span class="wiring__swatch" style="background:rgba(255,255,255,0.5)"></span>Per-cycle dataflow</span>
+            <span><span class="wiring__swatch" style="background:#4ecdc4"></span>MX forward (EX/MEM → EX)</span>
+            <span><span class="wiring__swatch" style="background:#f77f00"></span>WX forward (MEM/WB → EX)</span>
+          </div>
+        </div>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Stage</th><th>Module(s)</th><th>Responsibility</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>IF</td><td>fetch, memory (imem)</td><td>Hold/advance PC; read instruction word</td></tr>
+            <tr><td>ID</td><td>decode, igen, control, register_file</td><td>Extract fields; build immediate; generate control; read rs1/rs2</td></tr>
+            <tr><td>EX</td><td>alu (execute), branch_control</td><td>Arithmetic/logic; address calc; branch decision</td></tr>
+            <tr><td>MEM</td><td>memory (dmem)</td><td>Load/store data-memory access</td></tr>
+            <tr><td>WB</td><td>writeback</td><td>Select ALU / memory / PC+4 result to write back</td></tr>
+          </tbody>
+        </table>
+
+        <ol class="dsp-pipeline">
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">1</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">IF — Instruction Fetch</span>
+              <span class="dsp-stage__desc">PC in a reset-initialised register (<code>0x01000000</code>); advances by 4, holds during a stall, or loads a branch/jump target. Instruction word read from a read-only <code>imem</code> instance.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">2</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">ID — Decode, Immediate &amp; Control</span>
+              <span class="dsp-stage__desc"><code>decode</code> splits the fields, <code>igen</code> assembles the sign-extended immediate (I/S/B/U/J), and a combinational <code>control</code> decoder drives the datapath — with safe defaults so unknown opcodes are inert.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">3</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">EX — Execute</span>
+              <span class="dsp-stage__desc">The ALU runs the full RV32I repertoire and computes effective / branch / jump targets; <code>branch_control</code> produces equal and less-than flags that resolve each branch type. Forwarded operands feed both the ALU and the comparator.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">4</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">MEM — Memory Access</span>
+              <span class="dsp-stage__desc">Byte-addressable with byte/half/word accesses by funct3 — combinational reads with sign/zero extension (lb/lh vs lbu/lhu), synchronous size-aware writes (sb/sh/sw).</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">5</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">WB — Write-Back</span>
+              <span class="dsp-stage__desc">A two-bit <code>wbsel</code> commits the ALU result (00), loaded data (01) or the return address PC+4 (10). A second instance of the block computes the next-PC target for Fetch.</span>
+            </div>
+          </li>
+        </ol>
       </div>
 
+      <!-- Instruction Set -->
       <div>
-        <h2>Challenges & learnings</h2>
-        <p>Describe any interesting problems you ran into and how you solved them. This is where you show depth — tradeoffs, debugging, and what you would do differently next time.</p>
+        <h2>Instruction Set — RV32I Formats</h2>
+        <p>All instructions are 32 bits wide and fall into six encoding formats distinguished by how the immediate is assembled. The opcode occupies the low seven bits in every format.</p>
+
+        <div class="bitfield">
+          <div class="bitfield__label">R-type — register/register (add, sub, sll, slt)</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:7"><span class="bitfield__bits">31:25</span><span class="bitfield__name">funct7</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">24:20</span><span class="bitfield__name">rs2</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">19:15</span><span class="bitfield__name">rs1</span></div>
+            <div class="bitfield__seg" style="flex:3"><span class="bitfield__bits">14:12</span><span class="bitfield__name">funct3</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">rd</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <div class="bitfield">
+          <div class="bitfield__label">I-type — immediate, load &amp; jalr (addi, lw, jalr)</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:12"><span class="bitfield__bits">31:20</span><span class="bitfield__name">imm[11:0]</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">19:15</span><span class="bitfield__name">rs1</span></div>
+            <div class="bitfield__seg" style="flex:3"><span class="bitfield__bits">14:12</span><span class="bitfield__name">funct3</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">rd</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <div class="bitfield">
+          <div class="bitfield__label">S-type — store (sb, sh, sw)</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:7"><span class="bitfield__bits">31:25</span><span class="bitfield__name">imm[11:5]</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">24:20</span><span class="bitfield__name">rs2</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">19:15</span><span class="bitfield__name">rs1</span></div>
+            <div class="bitfield__seg" style="flex:3"><span class="bitfield__bits">14:12</span><span class="bitfield__name">funct3</span></div>
+            <div class="bitfield__seg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">imm[4:0]</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <div class="bitfield">
+          <div class="bitfield__label">B-type — branch (beq, bne, blt, bge, bltu, bgeu)</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:7"><span class="bitfield__bits">31:25</span><span class="bitfield__name">imm[12|10:5]</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">24:20</span><span class="bitfield__name">rs2</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">19:15</span><span class="bitfield__name">rs1</span></div>
+            <div class="bitfield__seg" style="flex:3"><span class="bitfield__bits">14:12</span><span class="bitfield__name">funct3</span></div>
+            <div class="bitfield__seg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">imm[4:1|11]</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <div class="bitfield">
+          <div class="bitfield__label">U-type — upper immediate (lui, auipc)</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:20"><span class="bitfield__bits">31:12</span><span class="bitfield__name">imm[31:12]</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">rd</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <div class="bitfield">
+          <div class="bitfield__label">J-type — jump (jal)</div>
+          <div class="bitfield__row">
+            <div class="bitfield__seg" style="flex:20"><span class="bitfield__bits">31:12</span><span class="bitfield__name">imm[20|10:1|11|19:12]</span></div>
+            <div class="bitfield__seg bitfield__seg--reg" style="flex:5"><span class="bitfield__bits">11:7</span><span class="bitfield__name">rd</span></div>
+            <div class="bitfield__seg bitfield__seg--op" style="flex:7"><span class="bitfield__bits">6:0</span><span class="bitfield__name">opcode</span></div>
+          </div>
+        </div>
+
+        <p>The ALU implements the full arithmetic, logic, shift and comparison repertoire, plus the upper-immediate operations:</p>
+        <div class="op-group">
+          <div class="op-group__label">Arithmetic</div>
+          <ul class="pill-list"><li>ADD</li><li>SUB</li></ul>
+        </div>
+        <div class="op-group">
+          <div class="op-group__label">Logic</div>
+          <ul class="pill-list"><li>AND</li><li>OR</li><li>XOR</li></ul>
+        </div>
+        <div class="op-group">
+          <div class="op-group__label">Shift</div>
+          <ul class="pill-list"><li>SLL</li><li>SRL</li><li>SRA</li></ul>
+        </div>
+        <div class="op-group">
+          <div class="op-group__label">Compare</div>
+          <ul class="pill-list"><li>SLT</li><li>SLTU</li></ul>
+        </div>
+        <div class="op-group">
+          <div class="op-group__label">Upper immediate</div>
+          <ul class="pill-list"><li>LUI</li><li>AUIPC</li></ul>
+        </div>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Class</th><th>regwren</th><th>memren</th><th>memwren</th><th>pcsel</th><th>wbsel</th><th>ALU op</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>R-type</td><td>1</td><td>0</td><td>0</td><td>0</td><td>00 (ALU)</td><td>by funct3/funct7</td></tr>
+            <tr><td>I-type</td><td>1</td><td>0</td><td>0</td><td>0</td><td>00 (ALU)</td><td>by funct3</td></tr>
+            <tr><td>Load</td><td>1</td><td>1</td><td>0</td><td>0</td><td>01 (mem)</td><td>ADD (address)</td></tr>
+            <tr><td>Store</td><td>0</td><td>0</td><td>1</td><td>0</td><td>00</td><td>ADD (address)</td></tr>
+            <tr><td>Branch</td><td>0</td><td>0</td><td>0</td><td>0</td><td>00</td><td>SUB (compare)</td></tr>
+            <tr><td>jal / jalr</td><td>1</td><td>0</td><td>0</td><td>1</td><td>10 (PC+4)</td><td>ADD (target)</td></tr>
+            <tr><td>lui</td><td>1</td><td>0</td><td>0</td><td>0</td><td>00</td><td>pass immediate</td></tr>
+            <tr><td>auipc</td><td>1</td><td>0</td><td>0</td><td>0</td><td>00</td><td>PC + immediate</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pipeline Registers -->
+      <div>
+        <h2>Pipeline Registers</h2>
+        <p>All four inter-stage registers live in one <code>pipeline_registers</code> module. Each latches the data and control its downstream stage needs, supports stalling via a write-enable, and resets to a defined idle state; the two front-end registers (IF/ID, ID/EX) additionally support flushing.</p>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Register</th><th>Carries (selected)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>IF/ID</td><td>PC, fetched instruction word</td></tr>
+            <tr><td>ID/EX</td><td>PC, rs1/rs2 data &amp; indices, rd, immediate, funct3/funct7, opcode, all control signals</td></tr>
+            <tr><td>EX/MEM</td><td>PC, ALU result, store data &amp; rs2 index, rd, funct3, control, branch-taken flag</td></tr>
+            <tr><td>MEM/WB</td><td>PC, ALU result, loaded memory data, rd, regwren, wbsel</td></tr>
+          </tbody>
+        </table>
+
+        <p>A flush inserts a <strong>bubble</strong> — a benign no-op. In IF/ID a flush loads the canonical NOP encoding in place of the fetched instruction; in ID/EX it clears the memory and branch control signals so the squashed instruction touches nothing:</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            pipeline_registers.sv · bubble insertion
+          </div>
+          <pre><code><span class="tok-com">// IF/ID flush loads the canonical NOP:</span>
+0x00000013   <span class="tok-com">// addi x0, x0, 0  →  decodes to a harmless no-op</span>
+<span class="tok-com">// ID/EX flush clears memren / memwren / branch controls</span>
+<span class="tok-com">// so the bubbled instruction cannot access memory or alter control flow</span></code></pre>
+        </div>
+      </div>
+
+      <!-- Hazard Handling -->
+      <div>
+        <h2>Hazard Handling</h2>
+        <p>The hazard unit is the defining contribution of this deliverable. It observes the register indices and control signals across ID, EX, MEM and WB and drives three families of output: forwarding selects, stall/write-enable signals, and flush signals.</p>
+
+        <div class="hazard-flow">
+          <div class="hazard-flow__node">
+            <strong>Hazard Unit</strong>
+            <span>observes rs1 / rs2 / rd &amp; control across ID · EX · MEM · WB</span>
+          </div>
+          <div class="hazard-flow__branches">
+            <div class="hazard-flow__action hazard-flow__action--forward">
+              <h4>Forward</h4>
+              <p>A later stage produces a value an EX operand needs → bypass it directly into Execute. No penalty. MX (EX/MEM) has priority over WX (MEM/WB).</p>
+            </div>
+            <div class="hazard-flow__action hazard-flow__action--stall">
+              <h4>Stall + bubble</h4>
+              <p>Load–use (data one cycle too late) or write–decode dependency → freeze PC &amp; IF/ID, bubble ID/EX for exactly one cycle. It then becomes an ordinary forward.</p>
+            </div>
+            <div class="hazard-flow__action hazard-flow__action--flush">
+              <h4>Flush</h4>
+              <p>Branch resolved taken, or jal/jalr in EX → squash the two wrongly-fetched instructions in IF/ID &amp; ID/EX and redirect the PC to the target.</p>
+            </div>
+          </div>
+        </div>
+
+        <p>Most data dependencies are resolved without any stall by <strong>forwarding</strong> a result from a later pipeline stage straight into Execute, before it is written back. Each source operand has a 3:1 select — and crucially, the forwarded operands feed <em>both</em> the ALU and the branch comparator, so branches that depend on a just-computed value compare against the correct data.</p>
+
+        <div class="wiring">
+          <svg viewBox="0 0 640 250" role="img" aria-label="Per-operand forwarding multiplexer feeding the ALU and branch comparator">
+            <g font-family="monospace">
+              <!-- inputs -->
+              <rect x="20" y="30"  width="230" height="40" rx="6" fill="#111a35" stroke="rgba(255,255,255,0.18)"/>
+              <text x="34" y="49" fill="#e6e9f0" font-size="11">ID/EX register value</text>
+              <text x="34" y="63" fill="#6b7a99" font-size="9">sel 00 · no hazard</text>
+
+              <rect x="20" y="95"  width="230" height="40" rx="6" fill="#111a35" stroke="rgba(78,205,196,0.5)"/>
+              <text x="34" y="114" fill="#4ecdc4" font-size="11">EX/MEM ALU result — MX</text>
+              <text x="34" y="128" fill="#6b7a99" font-size="9">sel 01 · from Memory</text>
+
+              <rect x="20" y="160" width="230" height="40" rx="6" fill="#111a35" stroke="rgba(247,127,0,0.5)"/>
+              <text x="34" y="179" fill="#f77f00" font-size="11">MEM/WB writeback — WX</text>
+              <text x="34" y="193" fill="#6b7a99" font-size="9">sel 10 · from Write-back</text>
+
+              <!-- mux trapezoid -->
+              <path d="M300,60 L340,85 L340,150 L300,175 Z" fill="rgba(247,183,103,0.2)" stroke="rgba(247,183,103,0.8)"/>
+              <text x="320" y="120" fill="#e6e9f0" font-size="10" text-anchor="middle">mux</text>
+
+              <!-- wires in -->
+              <g stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none">
+                <path d="M250,50 H300"/>
+                <path d="M250,115 H300"/>
+                <path d="M250,180 H300"/>
+              </g>
+
+              <!-- output -->
+              <path d="M340,117 H420" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="none"/>
+              <rect x="420" y="90" width="180" height="55" rx="6" fill="#1a2340" stroke="rgba(247,127,0,0.55)"/>
+              <text x="510" y="114" fill="#e6e9f0" font-size="11" text-anchor="middle">ALU /</text>
+              <text x="510" y="130" fill="#e6e9f0" font-size="11" text-anchor="middle">branch comparator</text>
+
+              <!-- select control -->
+              <path d="M320,220 V150" stroke="#f7b267" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+              <text x="320" y="235" fill="#f7b267" font-size="10" text-anchor="middle">rs1_sel / rs2_sel</text>
+            </g>
+          </svg>
+          <div class="wiring__legend">
+            <span><span class="wiring__swatch" style="background:#4ecdc4"></span>MX — EX/MEM bypass</span>
+            <span><span class="wiring__swatch" style="background:#f77f00"></span>WX — MEM/WB bypass</span>
+            <span><span class="wiring__swatch" style="background:#f7b267"></span>Hazard-unit select</span>
+          </div>
+        </div>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Hazard</th><th>Detection condition</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Forward MX</td><td>MEM stage writes a register (≠ x0) an EX operand needs</td><td>Bypass EX/MEM ALU result into EX</td></tr>
+            <tr><td>Forward WX</td><td>WB stage writes a register an EX operand needs (no MX match)</td><td>Bypass MEM/WB data into EX</td></tr>
+            <tr><td>Load–use</td><td>EX holds a load whose rd matches an ID source register</td><td>Stall 1 cycle + bubble</td></tr>
+            <tr><td>Write–decode</td><td>WB writes a register an ID source needs</td><td>Stall 1 cycle + bubble</td></tr>
+            <tr><td>Control</td><td>EX signals branch-taken, or EX opcode is jal/jalr</td><td>Flush IF/ID and ID/EX</td></tr>
+            <tr><td>Store forward (WM)</td><td>MEM holds a store whose rs2 equals the WB destination</td><td>Substitute WB data as store data</td></tr>
+          </tbody>
+        </table>
+
+        <ol class="dsp-pipeline">
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">MX</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">EX/MEM → EX forward</span>
+              <span class="dsp-stage__desc">Routes the ALU result waiting in EX/MEM back into Execute — covers a dependency on the immediately preceding instruction.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">WX</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">MEM/WB → EX forward</span>
+              <span class="dsp-stage__desc">Routes the writeback-selected value in MEM/WB back into Execute — covers a dependency on the instruction two ahead. MX wins when both match.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">LU</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Load–use stall</span>
+              <span class="dsp-stage__desc">A load's data isn't ready until end of MEM — one cycle too late. Freeze PC &amp; IF/ID, bubble ID/EX one cycle; the dependency then becomes an ordinary forward.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">WD</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Write–decode stall</span>
+              <span class="dsp-stage__desc">A combinational ID read of a register being written synchronously in WB could see the stale value; stall one cycle so the updated value is read next cycle.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">CF</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Control-flow flush</span>
+              <span class="dsp-stage__desc">On a taken branch or jal/jalr in EX, squash the two speculatively-fetched instructions to bubbles and load the computed target into the PC. Suppressed while stalling.</span>
+            </div>
+          </li>
+          <li class="dsp-stage">
+            <span class="dsp-stage__num">WM</span>
+            <div class="dsp-stage__body">
+              <span class="dsp-stage__name">Store-data forward</span>
+              <span class="dsp-stage__desc">For a load immediately followed by a store of the same register, substitute the WB data for the store data before it reaches memory (resolved in top-level wiring).</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Pipeline in action -->
+      <div>
+        <h2>Pipeline in Action</h2>
+        <p>Two cycle-by-cycle views of hazards resolving. In the first, back-to-back dependent instructions proceed with zero penalty thanks to forwarding, while a load–use dependency costs exactly one bubble.</p>
+
+        <div class="pipe-chart">
+          <div class="pipe-chart__grid" style="grid-template-columns: 150px repeat(9, minmax(40px, 1fr));">
+            <div class="pipe-chart__label"></div>
+            <div class="pipe-chart__head">c1</div><div class="pipe-chart__head">c2</div><div class="pipe-chart__head">c3</div><div class="pipe-chart__head">c4</div><div class="pipe-chart__head">c5</div><div class="pipe-chart__head">c6</div><div class="pipe-chart__head">c7</div><div class="pipe-chart__head">c8</div><div class="pipe-chart__head">c9</div>
+
+            <div class="pipe-chart__label">add x5,x1,x2</div>
+            <div class="pipe-chart__cell pipe-chart__cell--if">IF</div><div class="pipe-chart__cell pipe-chart__cell--id">ID</div><div class="pipe-chart__cell pipe-chart__cell--ex">EX</div><div class="pipe-chart__cell pipe-chart__cell--mem">MEM</div><div class="pipe-chart__cell pipe-chart__cell--wb">WB</div><div></div><div></div><div></div><div></div>
+
+            <div class="pipe-chart__label">sub x6,x5,x1</div>
+            <div></div><div class="pipe-chart__cell pipe-chart__cell--if">IF</div><div class="pipe-chart__cell pipe-chart__cell--id">ID</div><div class="pipe-chart__cell pipe-chart__cell--ex">EX</div><div class="pipe-chart__cell pipe-chart__cell--mem">MEM</div><div class="pipe-chart__cell pipe-chart__cell--wb">WB</div><div></div><div></div><div></div>
+
+            <div class="pipe-chart__label">lw x7,0(x6)</div>
+            <div></div><div></div><div class="pipe-chart__cell pipe-chart__cell--if">IF</div><div class="pipe-chart__cell pipe-chart__cell--id">ID</div><div class="pipe-chart__cell pipe-chart__cell--ex">EX</div><div class="pipe-chart__cell pipe-chart__cell--mem">MEM</div><div class="pipe-chart__cell pipe-chart__cell--wb">WB</div><div></div><div></div>
+
+            <div class="pipe-chart__label">add x8,x7,x1</div>
+            <div></div><div></div><div></div><div class="pipe-chart__cell pipe-chart__cell--if">IF</div><div class="pipe-chart__cell pipe-chart__cell--id">ID</div><div class="pipe-chart__cell pipe-chart__cell--bubble">⊘</div><div class="pipe-chart__cell pipe-chart__cell--ex">EX</div><div class="pipe-chart__cell pipe-chart__cell--mem">MEM</div><div class="pipe-chart__cell pipe-chart__cell--wb">WB</div>
+          </div>
+          <div class="pipe-chart__legend">
+            <span><span class="pipe-chart__swatch" style="background:#4ecdc4"></span>IF</span>
+            <span><span class="pipe-chart__swatch" style="background:#6bd4a0"></span>ID</span>
+            <span><span class="pipe-chart__swatch" style="background:#f7b267"></span>EX</span>
+            <span><span class="pipe-chart__swatch" style="background:#f79d65"></span>MEM</span>
+            <span><span class="pipe-chart__swatch" style="background:#f4845f"></span>WB</span>
+            <span><span class="pipe-chart__swatch" style="background:repeating-linear-gradient(45deg,rgba(255,255,255,0.15),rgba(255,255,255,0.15) 3px,transparent 3px,transparent 6px)"></span>⊘ stall bubble</span>
+          </div>
+        </div>
+
+        <p>In the second, a taken branch is resolved in Execute (c3). The two instructions already fetched onto the wrong path are squashed to bubbles, and the correct target is fetched from the next cycle.</p>
+
+        <div class="pipe-chart">
+          <div class="pipe-chart__grid" style="grid-template-columns: 150px repeat(8, minmax(40px, 1fr));">
+            <div class="pipe-chart__label"></div>
+            <div class="pipe-chart__head">c1</div><div class="pipe-chart__head">c2</div><div class="pipe-chart__head">c3</div><div class="pipe-chart__head">c4</div><div class="pipe-chart__head">c5</div><div class="pipe-chart__head">c6</div><div class="pipe-chart__head">c7</div><div class="pipe-chart__head">c8</div>
+
+            <div class="pipe-chart__label">beq x8,x0,L ✔</div>
+            <div class="pipe-chart__cell pipe-chart__cell--if">IF</div><div class="pipe-chart__cell pipe-chart__cell--id">ID</div><div class="pipe-chart__cell pipe-chart__cell--ex">EX</div><div class="pipe-chart__cell pipe-chart__cell--mem">MEM</div><div class="pipe-chart__cell pipe-chart__cell--wb">WB</div><div></div><div></div><div></div>
+
+            <div class="pipe-chart__label">next+4 (wrong)</div>
+            <div></div><div class="pipe-chart__cell pipe-chart__cell--if">IF</div><div class="pipe-chart__cell pipe-chart__cell--squash">flush</div><div></div><div></div><div></div><div></div><div></div>
+
+            <div class="pipe-chart__label">next+8 (wrong)</div>
+            <div></div><div></div><div class="pipe-chart__cell pipe-chart__cell--squash">flush</div><div></div><div></div><div></div><div></div><div></div>
+
+            <div class="pipe-chart__label">target L (correct)</div>
+            <div></div><div></div><div></div><div class="pipe-chart__cell pipe-chart__cell--if">IF</div><div class="pipe-chart__cell pipe-chart__cell--id">ID</div><div class="pipe-chart__cell pipe-chart__cell--ex">EX</div><div class="pipe-chart__cell pipe-chart__cell--mem">MEM</div><div class="pipe-chart__cell pipe-chart__cell--wb">WB</div>
+          </div>
+          <div class="pipe-chart__legend">
+            <span><span class="pipe-chart__swatch" style="background:rgba(247,127,0,0.4);border:1px dashed rgba(247,127,0,0.7)"></span>flush → squashed to NOP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification -->
+      <div>
+        <h2>Verification</h2>
+        <p>The design was developed and verified on Linux, driven entirely from bash. The primary simulator was ModelSim (Intel FPGA / Quartus), with Verilator as an open-source alternative; waveforms were captured as VCD and inspected in gtkwave. Verification is anchored on probe signals exposed at every stage, compared each cycle against a golden reference so any mismatch pinpoints the exact diverging cycle and signal.</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            verif/scripts · GNU Make flow
+          </div>
+          <pre><code>make compile -C verif/scripts/ VSIM=1
+make run     -C verif/scripts/ VSIM=1 TEST=&lt;name&gt;
+make run     -C verif/scripts/ VSIM=1 TEST=&lt;name&gt; PATTERN_CHECK=1
+<span class="tok-com"># a correct design reports "Checks passed"</span></code></pre>
+        </div>
+
+        <p>Because the benchmarks are self-contained programs, the top level watches the instruction stream for termination:</p>
+
+        <div class="code-block">
+          <div class="code-block__header">
+            <span class="code-block__dot"></span>
+            program-termination detection
+          </div>
+          <pre><code>ecall  <span class="tok-str">0x00000073</span>   <span class="tok-com">// ends the simulation immediately</span>
+ret    <span class="tok-str">0x00008067</span>   <span class="tok-com">// function test: end once x2 (sp) unwinds to top of memory</span></code></pre>
+        </div>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Level</th><th>Count</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Directed pattern tests</td><td>3</td><td>Baseline datapath correctness via golden patterns</td></tr>
+            <tr><td>Pipeline micro-tests</td><td>13</td><td>One test per hazard path — each forward / stall / flush in isolation</td></tr>
+            <tr><td>rv32-bmarks — instruction</td><td>38</td><td>rv32ui-p-* ISA tests, one per RV32I instruction</td></tr>
+            <tr><td>rv32-bmarks — full programs</td><td>10</td><td>Complete C benchmarks (BubbleSort, Fibonacci, gcd, …)</td></tr>
+          </tbody>
+        </table>
+
+        <table class="spec-table">
+          <thead>
+            <tr><th>Category</th><th>Tests</th><th>Result</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Directed pattern tests</td><td>3</td><td>PASS</td></tr>
+            <tr><td>Pipeline hazard micro-tests</td><td>13</td><td>PASS</td></tr>
+            <tr><td>rv32-bmarks instruction tests</td><td>38</td><td>PASS</td></tr>
+            <tr><td>rv32-bmarks full-program benchmarks</td><td>10</td><td>PASS</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>64</strong></td><td><strong>ALL PASS</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Results & future work -->
+      <div>
+        <h2>Results &amp; Future Work</h2>
+        <p>PD5 passes the complete verification suite. Waveform inspection confirmed the intended behaviour: forwarded operands arrive at Execute the same cycle they are needed; load–use and write–decode dependencies each cost exactly one bubble; and taken branches and jumps redirect the PC with the two mis-fetched instructions cleanly squashed.</p>
+
+        <div class="future-grid">
+          <div class="future-card">
+            <h3>Results</h3>
+            <ul>
+              <li>64 / 64 tests pass — directed, hazard micro-tests, RV32UI ISA, and C benchmarks</li>
+              <li>Forwarded operands reach both the ALU and the branch comparator correctly</li>
+              <li>Load–use &amp; write–decode each cost one bubble; branches squash exactly two instructions</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Highlights</h3>
+            <ul>
+              <li>Two-source forwarding network (MX + WX) with MX priority</li>
+              <li>Single-cycle stalls for the cases forwarding cannot cover</li>
+              <li>Single-cycle flush via cheap NOP-bubble insertion</li>
+              <li>Store-data (WM) forwarding for back-to-back load→store pairs</li>
+            </ul>
+          </div>
+          <div class="future-card">
+            <h3>Future Work</h3>
+            <ul>
+              <li>Fold the WM store-forward fully inside the hazard unit</li>
+              <li>Branch prediction to cut the control-flow penalty</li>
+              <li>RISC-V M extension (multiply / divide); CSR &amp; exception handling</li>
+              <li>Carry the design through Quartus synthesis for timing &amp; resource analysis</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="project-links">
-        <a href="#" class="btn">View on GitHub</a>
-        <a href="#" class="btn btn--ghost">Live Demo</a>
+        <a href="https://github.com/salwan-aldhahab/RISC-V_Project" class="btn" target="_blank" rel="noopener noreferrer">View on GitHub</a>
       </div>
+
     </div>
   </div>
 
