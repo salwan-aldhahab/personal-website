@@ -45,11 +45,6 @@
         <li>REST / JSON</li>
       </ul>
       <p class="eyebrow">EECS 3311 · Software Design · York University — Group 8</p>
-      <div class="hero__actions" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
-        <a href="#" class="btn" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-        <a href="https://www.youtube.com/watch?v=25Xqdr13NMs" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Sprint 1 Demo</a>
-        <a href="https://youtu.be/3GhPyGNPRdU" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Sprint 2 Demo</a>
-      </div>
     </div>
 
     <!-- Animated request-flow hero -->
@@ -104,8 +99,8 @@
           <div class="metric"><span class="metric__value">5</span><span class="metric__label">JPA entities</span></div>
           <div class="metric"><span class="metric__value">3</span><span class="metric__label">User roles</span></div>
           <div class="metric"><span class="metric__value">~15</span><span class="metric__label">REST endpoints</span></div>
-          <div class="metric"><span class="metric__value">3000·8080·3306</span><span class="metric__label">SPA · API · DB ports</span></div>
-          <div class="metric"><span class="metric__value">Agile</span><span class="metric__label">Sprints 0–2</span></div>
+          <div class="metric"><span class="metric__value">16</span><span class="metric__label">Client-side routes</span></div>
+          <div class="metric"><span class="metric__value">3</span><span class="metric__label">Ports · 3000 / 8080 / 3306</span></div>
         </div>
       </div>
 
@@ -152,21 +147,16 @@
         <div class="tier-stack">
           <div class="tier tier--client">
             <span class="tier__title">Presentation Tier — React 18 SPA</span>
-            <span class="tier__meta">Pages &amp; Components · React Router v6 · UserContext · Material-UI · Axios / Fetch · jsPDF — runs in the browser at <code>localhost:3000</code></span>
+            <span class="tier__meta">Pages &amp; Components · React Router v6 · UserContext · Material-UI · Axios / Fetch · jsPDF — runs at <code>localhost:3000</code></span>
           </div>
           <div class="tier-conn"><span>HTTP · REST · JSON — CORS (<code>@CrossOrigin</code>)</span></div>
           <div class="tier tier--server">
             <span class="tier__title">Application Tier — Spring Boot 3.3.5 REST API (Java 17)</span>
-            <span class="tier__meta">Controllers → Services → Repositories · embedded Tomcat at <code>localhost:8080</code></span>
+            <span class="tier__meta">Controllers → Services → Repositories · embedded Tomcat — <code>localhost:8080</code></span>
           </div>
-          <div class="tier-conn"></div>
-          <div class="tier tier--orm">
-            <span class="tier__title">Spring Data JPA / Hibernate</span>
-            <span class="tier__meta">object–relational mapping (entities ↔ tables)</span>
-          </div>
-          <div class="tier-conn"><span>JDBC</span></div>
+          <div class="tier-conn"><span>Spring Data JPA / Hibernate · JDBC — maps entities ↔ tables</span></div>
           <div class="tier tier--data">
-            <span class="tier__title">MySQL 8</span>
+            <span class="tier__title">Data Tier — MySQL 8</span>
             <span class="tier__meta">database <code>yuplanner</code> · <code>:3306</code></span>
           </div>
         </div>
@@ -205,16 +195,7 @@
           </svg>
         </div>
 
-        <h3 style="font-size:1.05rem;margin:22px 0 4px;">Request lifecycle</h3>
-        <ol class="dsp-pipeline">
-          <li class="dsp-stage"><span class="dsp-stage__num">1</span><div class="dsp-stage__body"><span class="dsp-stage__name">React component issues an HTTP request</span><span class="dsp-stage__desc">Axios or Fetch to a backend URL, e.g. <code>GET http://localhost:8080/course/getAll</code>.</span></div></li>
-          <li class="dsp-stage"><span class="dsp-stage__num">2</span><div class="dsp-stage__body"><span class="dsp-stage__name">Spring MVC routes to a @RestController</span><span class="dsp-stage__desc">Matched by HTTP method + path.</span></div></li>
-          <li class="dsp-stage"><span class="dsp-stage__num">3</span><div class="dsp-stage__body"><span class="dsp-stage__name">Controller delegates to a service</span><span class="dsp-stage__desc">Business logic lives behind the service interface.</span></div></li>
-          <li class="dsp-stage"><span class="dsp-stage__num">4</span><div class="dsp-stage__body"><span class="dsp-stage__name">Service calls a repository</span><span class="dsp-stage__desc">A Spring Data <code>JpaRepository</code> reads/writes entities.</span></div></li>
-          <li class="dsp-stage"><span class="dsp-stage__num">5</span><div class="dsp-stage__body"><span class="dsp-stage__name">Hibernate → SQL over JDBC</span><span class="dsp-stage__desc">Entity operations translated to SQL against MySQL.</span></div></li>
-          <li class="dsp-stage"><span class="dsp-stage__num">6</span><div class="dsp-stage__body"><span class="dsp-stage__name">Controller serialises the result to JSON</span><span class="dsp-stage__desc">Spring returns the HTTP response.</span></div></li>
-          <li class="dsp-stage"><span class="dsp-stage__num">7</span><div class="dsp-stage__body"><span class="dsp-stage__name">Component updates state &amp; re-renders</span><span class="dsp-stage__desc">The SPA reflects the new data.</span></div></li>
-        </ol>
+        <p>A request flows straight down the stack and back: a React component calls the API (Axios/Fetch), Spring MVC routes it to the matching <code>@RestController</code>, which delegates to a service and then a Spring Data repository; Hibernate turns the entity operations into SQL over JDBC, and the JSON result propagates back up to re-render the component. The login and rating sequence diagrams (below) trace this concretely.</p>
         <p style="font-size:0.85rem;color:var(--muted);">CORS: <code>courseController</code> restricts access to <code>http://localhost:3000</code>; the other controllers use a bare <code>@CrossOrigin</code> (all origins) — flagged in Limitations.</p>
       </div>
 
@@ -469,12 +450,11 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
               <text x="504" y="310" fill="#e8778a" font-size="8.5" text-anchor="middle">@ManyToOne</text>
               <text x="504" y="330" fill="#8b97b0" font-size="8.5" text-anchor="middle">*        1</text>
 
-              <!-- soft links (dashed) -->
+              <!-- soft (string-based) links: student→courses, professor→courses, advisor→students -->
               <g stroke="#586179" stroke-width="1" stroke-dasharray="4 4" fill="none">
                 <path d="M184,100 H300"/>
                 <path d="M104,166 V256"/>
                 <path d="M385,176 V256"/>
-                <path d="M184,316 H300"/>
               </g>
             </g>
             <g font-family="monospace" font-size="9">
@@ -536,8 +516,13 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
                 <text x="655" y="138" fill="#e8778a" font-size="10" font-weight="600" text-anchor="middle">Advisor</text>
                 <g fill="#8fa0bd" font-size="8"><text x="580" y="153">/advisor-profile</text><text x="580" y="166">· AdvisorViewCourses</text><text x="580" y="179">· AdvisorViewStudents</text></g>
               </g>
-              <g stroke="#7f8db0" stroke-width="1.2" fill="none" marker-end="url(#ft-a)">
-                <path d="M300,62 Q120,90 95,118"/><path d="M320,62 Q270,90 275,118"/><path d="M336,62 Q430,90 465,118"/><path d="M356,62 Q620,88 655,118"/>
+              <g stroke="#7f8db0" stroke-width="1.2" fill="none">
+                <path d="M328,62 V90"/>
+                <path d="M95,90 H655"/>
+                <path d="M95,90 V118" marker-end="url(#ft-a)"/>
+                <path d="M275,90 V118" marker-end="url(#ft-a)"/>
+                <path d="M465,90 V118" marker-end="url(#ft-a)"/>
+                <path d="M655,90 V118" marker-end="url(#ft-a)"/>
               </g>
 
               <!-- shared band -->
