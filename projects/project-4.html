@@ -130,7 +130,7 @@
       <div>
         <h2>Functional Specification</h2>
         <p>The four select bits are partitioned in hardware: the upper pair <code>S3 S2</code> chooses the operation class (arithmetic / logic / shift) at the output multiplexer, while the lower pair <code>S1 S0</code> chooses the specific function. <code>Cin</code> distinguishes the two operations that share each arithmetic opcode.</p>
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Class (S3 S2)</th><th>Select S1 S0</th><th>Function</th></tr>
           </thead>
@@ -146,7 +146,7 @@
             <tr><td>Shift right (10)</td><td>X X</td><td>F = shr A (shift right one bit)</td></tr>
             <tr><td>Shift left (11)</td><td>X X</td><td>F = shl A (shift left one bit)</td></tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- Architecture -->
@@ -304,7 +304,7 @@
           <li class="dsp-stage"><span class="dsp-stage__num">8</span><div class="dsp-stage__body"><span class="dsp-stage__name">Chip integration</span><span class="dsp-stage__desc">Pad-frame assembly and full-chip stream-out in Virtuoso.</span></div></li>
         </ol>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Item</th><th>Setting</th></tr></thead>
           <tbody>
             <tr><td>Process</td><td>Cadence GPDK045 · 45 nm bulk CMOS</td></tr>
@@ -313,9 +313,9 @@
             <tr><td>Supply / ground</td><td>VDD / VSS</td></tr>
             <tr><td>Routing pin layer</td><td>Metal 4</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Stage</th><th>Tool</th><th>Role</th></tr></thead>
           <tbody>
             <tr><td>Simulation</td><td>Xcelium (SimVision)</td><td>Event-driven RTL verification vs testbenches</td></tr>
@@ -324,7 +324,7 @@
             <tr><td>Signoff</td><td>Innovus / Pegasus / Assura</td><td>DRC and connectivity (LVS-style) checks</td></tr>
             <tr><td>Chip assembly</td><td>Virtuoso</td><td>Pad-frame placement, I/O wiring, stream-out</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p>Choosing the slow, low-voltage, high-temperature corner (0.9 V, 125 °C) for setup analysis is deliberate — it is the worst case for cell delay, so timing that closes here closes across the operating range.</p>
       </div>
 
@@ -333,7 +333,7 @@
         <h2>Synthesis Results &amp; Core Selection</h2>
         <p>Three designs were carried through the flow: the 1-bit slice, the 32-bit hierarchical (structural) core, and a 32-bit behavioural core. The behavioural code writes each arithmetic operation as an independent <code>+</code>, so the synthesiser infers about twice the adder hardware (64 vs 32 full adders) and cannot share it — making it substantially larger.</p>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Metric</th><th>1-bit slice</th><th>32-bit hierarchical</th><th>32-bit behavioural</th></tr></thead>
           <tbody>
             <tr><td>Standard cells</td><td>12</td><td>367</td><td>635</td></tr>
@@ -342,7 +342,7 @@
             <tr><td>Critical path (ns)</td><td>3.881</td><td>9.724</td><td>9.832</td></tr>
             <tr><td>Est. f_max (MHz)</td><td>≈257</td><td>≈103</td><td>≈102</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <div class="fig-row fig-row--col">
           <figure class="project-figure">
@@ -470,7 +470,7 @@ $finish;</code></pre>
         </div>
 
         <p>A representative verification vector set — the 4:1 multiplexer, exercised across both complementary operand sets:</p>
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>a b c d</th><th>S1 S0</th><th>y</th></tr></thead>
           <tbody>
             <tr><td>0 1 0 1</td><td>0 0</td><td>0</td></tr>
@@ -478,7 +478,7 @@ $finish;</code></pre>
             <tr><td>0 1 0 1</td><td>1 0</td><td>0</td></tr>
             <tr><td>0 1 0 1</td><td>1 1</td><td>1</td></tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- Pad frame -->
@@ -497,7 +497,7 @@ $finish;</code></pre>
           </figure>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Edge</th><th>Signals</th><th>Pads</th></tr></thead>
           <tbody>
             <tr><td>Top</td><td>A[0:25] — operand A, low half</td><td>26</td></tr>
@@ -506,14 +506,14 @@ $finish;</code></pre>
             <tr><td>Right</td><td>F[0:25] — result F, low half</td><td>26</td></tr>
             <tr><td><strong>Total signal pads</strong></td><td>VDD/VSS supplied by the pad frame</td><td><strong>104</strong></td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p style="font-size:0.8rem;color:var(--muted);">Status: the core is placed and a subset of I/O nets are wired; the pad plan, pin assignment and routing methodology are fully defined — completing the remaining pad connections and re-running full-chip DRC/LVS is the final step to a tape-out-ready layout.</p>
       </div>
 
       <!-- Results & future work -->
       <div>
         <h2>Results &amp; Future Work</h2>
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th></th><th>1-bit slice</th><th>32-bit hierarchical</th><th>32-bit behavioural</th></tr></thead>
           <tbody>
             <tr><td>Cells</td><td>12</td><td>367</td><td>635</td></tr>
@@ -523,7 +523,7 @@ $finish;</code></pre>
             <tr><td>f_max (MHz)</td><td>≈257</td><td>≈103</td><td>≈102</td></tr>
             <tr><td>DRC / connectivity</td><td>clean</td><td>clean</td><td>clean</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <div class="future-grid">
           <div class="future-card">

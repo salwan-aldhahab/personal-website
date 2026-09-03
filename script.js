@@ -11,7 +11,13 @@ const prefersReducedMotion = window.matchMedia(
 // ── Nav active-section highlighting ──────────────────────────
 const navLinks = Array.from(document.querySelectorAll(".nav a"));
 const sections = navLinks
-  .map((link) => document.querySelector(link.getAttribute("href")))
+  .map((link) => {
+    // Only same-page anchors resolve to a section; cross-page links
+    // (e.g. "../index.html#home" on project pages) are skipped so
+    // querySelector never receives an invalid selector.
+    const href = link.getAttribute("href") || "";
+    return href.startsWith("#") ? document.querySelector(href) : null;
+  })
   .filter(Boolean);
 
 function highlightNav() {
@@ -62,6 +68,19 @@ function updateToTop() {
   toTop.classList.toggle("is-shown", window.scrollY > 500);
 }
 
+// ── Auto-hide the project-page header on scroll down ─────────
+// (only project pages have .page-header; the home page is unaffected)
+const pageHeader = document.querySelector(".page-header");
+let lastScrollY = window.scrollY;
+function updateHeader() {
+  if (!pageHeader) return;
+  const y = Math.max(window.scrollY, 0);
+  const goingDown = y > lastScrollY;
+  // Hide once past the header; reveal when scrolling up or near the top.
+  pageHeader.classList.toggle("page-header--hidden", goingDown && y > 140);
+  lastScrollY = y;
+}
+
 // ── Single throttled scroll handler ──────────────────────────
 let ticking = false;
 function onScroll() {
@@ -71,6 +90,7 @@ function onScroll() {
     highlightNav();
     updateProgress();
     updateToTop();
+    updateHeader();
     ticking = false;
   });
 }

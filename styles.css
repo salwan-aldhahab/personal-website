@@ -542,11 +542,25 @@ main {
 /* ── Project detail page ── */
 .page-header {
   padding: 32px clamp(16px, 4vw, 56px) 24px;
-  background: linear-gradient(135deg, rgba(15, 28, 63, 0.95), rgba(11, 19, 43, 0.9));
+  background: linear-gradient(180deg, rgba(6, 9, 20, 0.9) 0%, rgba(6, 9, 20, 0.6) 100%);
   position: sticky;
   top: 0;
   z-index: 10;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
+  transition: transform 0.32s ease;
+  will-change: transform;
+}
+
+/* Slides up out of view when scrolling down (toggled by script.js) */
+.page-header--hidden {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-header {
+    transition: none;
+  }
 }
 
 .project-page {
@@ -554,6 +568,7 @@ main {
   margin: 0 auto;
   padding: 48px clamp(16px, 4vw, 56px) 80px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 32px;
 }
 
@@ -583,6 +598,7 @@ main {
 
 .project-body {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
 }
 
@@ -742,6 +758,7 @@ main {
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   text-align: left;
   vertical-align: top;
+  overflow-wrap: break-word;
 }
 
 .spec-table th {
@@ -754,7 +771,25 @@ main {
 
 .spec-table td:first-child {
   color: var(--muted);
-  white-space: nowrap;
+}
+
+/* Tables scroll horizontally inside their box on narrow screens instead of
+   stretching the page (a table cannot shrink below its content min-width). */
+.table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 12px;
+}
+
+.table-wrap .spec-table {
+  margin-top: 0;
+}
+
+/* Code/ASCII blocks scroll inside their box instead of stretching the page */
+.project-body pre {
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 /* ── Photo gallery ── */
@@ -1899,6 +1934,10 @@ main {
   .card__media {
     min-height: 200px;
   }
+
+  .spec-table {
+    font-size: 0.82rem;
+  }
 }
 
 @media (max-width: 960px) {
@@ -1921,20 +1960,27 @@ main {
 }
 
 @media (max-width: 780px) {
+  /* Home-page nav scrolls with the page; the project header stays sticky
+     but auto-hides on scroll-down (handled in script.js). */
+  .nav-shell {
+    position: static;
+  }
+
   .nav-shell {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
   }
 
   .nav {
     width: 100%;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
   }
 
   .nav a {
-    flex: 1 1 calc(50% - 8px);
+    flex: 0 0 auto;
     justify-content: center;
     text-align: center;
   }
@@ -1950,10 +1996,6 @@ main {
 }
 
 @media (max-width: 540px) {
-  .nav a {
-    flex-basis: 100%;
-  }
-
   .hero__actions {
     width: 100%;
   }

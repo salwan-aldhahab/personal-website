@@ -106,7 +106,7 @@
           </div>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr>
               <th>Tier</th>
@@ -131,7 +131,7 @@
               <td>Rolling-buffer live waveform in the browser</td>
             </tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- Hardware & Firmware -->
@@ -386,7 +386,7 @@ ws.onmessage = (event) => {
           </li>
         </ol>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Direction</th><th>Shape</th><th>Payload</th></tr>
           </thead>
@@ -394,7 +394,7 @@ ws.onmessage = (event) => {
             <tr><td>ESP32 → server</td><td><code>{"ecg":[…]}</code></td><td>250 raw ADC ints (0–4095)</td></tr>
             <tr><td>server → browser</td><td><code>{"filtered":[…]}</code></td><td>250 cleaned ADC ints (0–4095)</td></tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- Limitations & future work -->

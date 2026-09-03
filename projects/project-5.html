@@ -107,7 +107,7 @@
       <!-- Technology stack -->
       <div>
         <h2>Technology Stack</h2>
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Backend</th><th>Technology</th><th>Notes</th></tr></thead>
           <tbody>
             <tr><td>Language</td><td>Java 17</td><td>maven.compiler 17</td></tr>
@@ -116,8 +116,8 @@
             <tr><td>Persistence</td><td>Spring Data JPA · Hibernate</td><td>MySQLDialect</td></tr>
             <tr><td>Build</td><td>Apache Maven</td><td>mvnw wrapper included</td></tr>
           </tbody>
-        </table>
-        <table class="spec-table">
+        </table></div>
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Frontend</th><th>Technology</th><th>Notes</th></tr></thead>
           <tbody>
             <tr><td>Library</td><td>React 18.3.1</td><td>Create React App (react-scripts 5)</td></tr>
@@ -126,8 +126,8 @@
             <tr><td>HTTP</td><td>Axios 1.7.8 + Fetch API</td><td>REST calls to backend</td></tr>
             <tr><td>PDF export</td><td>jsPDF 2.5.2</td><td>+ autotable / html2canvas</td></tr>
           </tbody>
-        </table>
-        <table class="spec-table">
+        </table></div>
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Database</th><th>Value</th></tr></thead>
           <tbody>
             <tr><td>Engine</td><td>MySQL 8.0.40 (InnoDB, utf8mb4)</td></tr>
@@ -136,7 +136,7 @@
             <tr><td>Schema strategy</td><td>spring.jpa.hibernate.ddl-auto=update</td></tr>
             <tr><td>Seed data</td><td>backend/db/yuplanner.sql</td></tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- System architecture -->
@@ -244,7 +244,7 @@
 +-- model/                      <span class="tok-com">// @Entity JPA domain objects</span></code></pre>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Repository</th><th>Derived query method</th></tr></thead>
           <tbody>
             <tr><td>studentRepository</td><td>student findByUsernameAndPassword(String, String)</td></tr>
@@ -253,7 +253,7 @@
             <tr><td>RatingRepository</td><td>List&lt;Rating&gt; findByProfessor(professor)</td></tr>
             <tr><td>advisorRepository</td><td>(none — inherited CRUD only)</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <div class="code-block">
           <div class="code-block__header">
@@ -273,7 +273,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
         <h2>REST API Reference</h2>
         <p>All endpoints are served at <code>http://localhost:8080</code>; request/response bodies are JSON. Each controller declares its own CORS policy.</p>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Method</th><th>Path</th><th>Request</th><th>Response</th></tr></thead>
           <tbody>
             <tr><td>POST</td><td>/student/add</td><td>student JSON</td><td>"New student is added"</td></tr>
@@ -287,7 +287,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
             <tr><td>POST</td><td>/rating/add</td><td>Rating JSON</td><td>"New rating is added"</td></tr>
             <tr><td>GET</td><td>/rating/average/{id}</td><td>path: int</td><td>double average · 404 if absent</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <div class="fig-row">
           <div class="code-block" style="margin-top:0;">
@@ -465,7 +465,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
           </svg>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Entity</th><th>Key fields</th><th>Seed rows</th></tr></thead>
           <tbody>
             <tr><td>student</td><td>id PK · studentid · name · username/password · courses : List&lt;String&gt; (@ElementCollection)</td><td>5</td></tr>
@@ -474,7 +474,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
             <tr><td>advisor</td><td>id PK · employeeid · name · username/password · students : String</td><td>4</td></tr>
             <tr><td>Rating</td><td>id PK · professor (@ManyToOne, @JoinColumn professor_id) · rating : double · review : varchar(500) · studentName</td><td>—</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p style="font-size:0.85rem;color:var(--muted);">All other conceptual links — a student's courses, a professor's courses, an advisor's students — are stored as human-readable strings, so they are neither validated nor joined by the database.</p>
       </div>
 
@@ -534,7 +534,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
           </svg>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Route</th><th>Component / purpose</th></tr></thead>
           <tbody>
             <tr><td>/login · /signup</td><td>Login / Signup — authentication</td></tr>
@@ -544,7 +544,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect</code></pre>
             <tr><td>/professor-profile</td><td>ProfessorProfile + ManageCourses / StudentsReviews</td></tr>
             <tr><td>/advisor-profile</td><td>AdvisorProfile + AdvisorViewCourses / ViewStudents</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p style="font-size:0.85rem;color:var(--muted);"><code>UserContext</code> stores the authenticated user + role after login. Components reach the API at <code>localhost:8080</code> via Axios and Fetch; the schedule view uses jsPDF (with autotable / html2canvas) to export a downloadable weekly timetable.</p>
 
         <h3 style="font-size:1.05rem;margin:22px 0 4px;">UI mockups</h3>
@@ -606,14 +606,14 @@ cd backend/yuplanner &amp;&amp; mvn spring-boot:run
 <span class="tok-com"># 3 · frontend → http://localhost:3000</span>
 cd frontend/yuplanner &amp;&amp; npm install &amp;&amp; npm start</code></pre>
         </div>
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead><tr><th>Component</th><th>Port</th><th>URL</th></tr></thead>
           <tbody>
             <tr><td>React SPA (CRA dev server)</td><td>3000</td><td>http://localhost:3000</td></tr>
             <tr><td>Spring Boot REST API</td><td>8080</td><td>http://localhost:8080</td></tr>
             <tr><td>MySQL</td><td>3306</td><td>jdbc:mysql://localhost:3306/yuplanner</td></tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- Limitations -->

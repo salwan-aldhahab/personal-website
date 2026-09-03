@@ -158,7 +158,7 @@
           </div>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Stage</th><th>Module(s)</th><th>Responsibility</th></tr>
           </thead>
@@ -169,7 +169,7 @@
             <tr><td>MEM</td><td>memory (dmem)</td><td>Load/store data-memory access</td></tr>
             <tr><td>WB</td><td>writeback</td><td>Select ALU / memory / PC+4 result to write back</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <ol class="dsp-pipeline">
           <li class="dsp-stage">
@@ -302,7 +302,7 @@
           <ul class="pill-list"><li>LUI</li><li>AUIPC</li></ul>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Class</th><th>regwren</th><th>memren</th><th>memwren</th><th>pcsel</th><th>wbsel</th><th>ALU op</th></tr>
           </thead>
@@ -316,7 +316,7 @@
             <tr><td>lui</td><td>1</td><td>0</td><td>0</td><td>0</td><td>00</td><td>pass immediate</td></tr>
             <tr><td>auipc</td><td>1</td><td>0</td><td>0</td><td>0</td><td>00</td><td>PC + immediate</td></tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- Pipeline Registers -->
@@ -324,7 +324,7 @@
         <h2>Pipeline Registers</h2>
         <p>All four inter-stage registers live in one <code>pipeline_registers</code> module. Each latches the data and control its downstream stage needs, supports stalling via a write-enable, and resets to a defined idle state; the two front-end registers (IF/ID, ID/EX) additionally support flushing.</p>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Register</th><th>Carries (selected)</th></tr>
           </thead>
@@ -334,7 +334,7 @@
             <tr><td>EX/MEM</td><td>PC, ALU result, store data &amp; rs2 index, rd, funct3, control, branch-taken flag</td></tr>
             <tr><td>MEM/WB</td><td>PC, ALU result, loaded memory data, rd, regwren, wbsel</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <p>A flush inserts a <strong>bubble</strong> — a benign no-op. In IF/ID a flush loads the canonical NOP encoding in place of the fetched instruction; in ID/EX it clears the memory and branch control signals so the squashed instruction touches nothing:</p>
 
@@ -423,7 +423,7 @@
           </div>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Hazard</th><th>Detection condition</th><th>Action</th></tr>
           </thead>
@@ -435,7 +435,7 @@
             <tr><td>Control</td><td>EX signals branch-taken, or EX opcode is jal/jalr</td><td>Flush IF/ID and ID/EX</td></tr>
             <tr><td>Store forward (WM)</td><td>MEM holds a store whose rs2 equals the WB destination</td><td>Substitute WB data as store data</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <ol class="dsp-pipeline">
           <li class="dsp-stage">
@@ -567,7 +567,7 @@ make run     -C verif/scripts/ VSIM=1 TEST=&lt;name&gt; PATTERN_CHECK=1
 ret    <span class="tok-str">0x00008067</span>   <span class="tok-com">// function test: end once x2 (sp) unwinds to top of memory</span></code></pre>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Level</th><th>Count</th><th>Purpose</th></tr>
           </thead>
@@ -577,9 +577,9 @@ ret    <span class="tok-str">0x00008067</span>   <span class="tok-com">// functi
             <tr><td>rv32-bmarks — instruction</td><td>38</td><td>rv32ui-p-* ISA tests, one per RV32I instruction</td></tr>
             <tr><td>rv32-bmarks — full programs</td><td>10</td><td>Complete C benchmarks (BubbleSort, Fibonacci, gcd, …)</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Category</th><th>Tests</th><th>Result</th></tr>
           </thead>
@@ -590,7 +590,7 @@ ret    <span class="tok-str">0x00008067</span>   <span class="tok-com">// functi
             <tr><td>rv32-bmarks full-program benchmarks</td><td>10</td><td>PASS</td></tr>
             <tr><td><strong>Total</strong></td><td><strong>64</strong></td><td><strong>ALL PASS</strong></td></tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- Results & future work -->

@@ -133,7 +133,7 @@
           </div>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Tool / Technology</th><th>Role in the project</th></tr>
           </thead>
@@ -144,7 +144,7 @@
             <tr><td>DE10-Lite (Intel MAX 10)</td><td>Target FPGA development board</td></tr>
             <tr><td>USB-to-UART converter</td><td>Serial bridge between host PC and FPGA</td></tr>
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       <!-- Hardware Platform -->
@@ -152,7 +152,7 @@
         <h2>Hardware Platform — DE10-Lite</h2>
         <p>The design targets the Terasic DE10-Lite, built around an Intel MAX 10 (<code>10M50DAF484C7G</code>). All sequential logic runs on the single 50 MHz board clock; the UART derives its own oversampled bit-clock from it with a counter, so no PLL is needed for the core. Reset is taken from <code>KEY[0]</code>.</p>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Resource</th><th>Signal</th><th>Use</th></tr>
           </thead>
@@ -165,7 +165,7 @@
             <tr><td>Red LEDs</td><td>LEDR[9:0]</td><td>Debug / register-state readout</td></tr>
             <tr><td>VGA connector</td><td>VGA_R/G/B, HS, VS</td><td>Register-state visualisation</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <p>One integration subtlety: the front-end peripherals (UART, ASCII converter) reset on a positive edge while the core modules reset on a negative edge, so the top level forms complementary <code>reset</code> / <code>negReset</code> signals — a reset-polarity split that was a recurring source of subtle bugs.</p>
       </div>
@@ -341,7 +341,7 @@ CLK_DIV = SYS_CLK / (OVER_SAMPLING * BAUD_RATE)
           </div>
         </div>
 
-        <table class="spec-table">
+        <div class="table-wrap"><table class="spec-table">
           <thead>
             <tr><th>Opcode</th><th>Format</th><th>Class</th></tr>
           </thead>
@@ -351,7 +351,7 @@ CLK_DIV = SYS_CLK / (OVER_SAMPLING * BAUD_RATE)
             <tr><td>0000011</td><td>I-type</td><td>Load</td></tr>
             <tr><td>0100011</td><td>S-type</td><td>Store</td></tr>
           </tbody>
-        </table>
+        </table></div>
 
         <p>The ALU implements 20 operations selected by a 5-bit internal opcode:</p>
         <div class="op-group">
