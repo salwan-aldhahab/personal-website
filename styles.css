@@ -429,8 +429,36 @@ main {
 }
 
 .contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.contact__link {
   display: grid;
-  gap: 6px;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--accent-2);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.contact__link:hover,
+.contact__link:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(47, 230, 221, 0.5);
+  background: rgba(47, 230, 221, 0.12);
+  box-shadow: var(--glow-cyan);
+  color: var(--accent-2);
+  outline: none;
+}
+
+.contact__link svg {
+  width: 24px;
+  height: 24px;
 }
 
 .footer {
