@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Five-stage RISC-V pipeline with forwarding path, verified 64 of 64">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#13213f"/>
+      <stop offset="1" stop-color="#0a1226"/>
+    </linearGradient>
+    <radialGradient id="glow3" cx="0.5" cy="0.42" r="0.75">
+      <stop offset="0" stop-color="#4ecdc4" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#4ecdc4" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid3" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#4ecdc4" stroke-opacity="0.06"/>
+    </pattern>
+    <marker id="arrow3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0 0L7 3L0 6Z" fill="#4ecdc4"/>
+    </marker>
+    <marker id="arrow3o" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0 0L7 3L0 6Z" fill="#f77f00"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#bg3)"/>
+  <rect width="800" height="500" fill="url(#grid3)"/>
+  <rect width="800" height="500" fill="url(#glow3)"/>
+
+  <text x="48" y="62" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="20" font-weight="600" letter-spacing="3" fill="#4ecdc4">5-STAGE PIPELINE</text>
+  <text x="752" y="70" text-anchor="end" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="46" font-weight="700" fill="#ffffff" fill-opacity="0.22">03</text>
+
+  <!-- forwarding arc EX -> ID -->
+  <path d="M520 232 C520 150 300 150 300 232" fill="none" stroke="#f77f00" stroke-width="3.5" stroke-dasharray="7 6" marker-end="url(#arrow3o)"/>
+  <text x="400" y="150" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="15" font-weight="600" fill="#f77f00">forwarding</text>
+
+  <!-- 5 stage blocks -->
+  <g font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-weight="700" font-size="24" text-anchor="middle">
+    <g>
+      <rect x="110" y="232" width="100" height="92" rx="12" fill="#111a35" stroke="#4ecdc4" stroke-width="2.5"/>
+      <text x="160" y="286" fill="#e6e9f0">IF</text>
+    </g>
+    <g>
+      <rect x="230" y="232" width="100" height="92" rx="12" fill="#111a35" stroke="#4ecdc4" stroke-width="2.5"/>
+      <text x="280" y="286" fill="#e6e9f0">ID</text>
+    </g>
+    <g>
+      <rect x="350" y="232" width="100" height="92" rx="12" fill="#111a35" stroke="#4ecdc4" stroke-width="2.5"/>
+      <text x="400" y="286" fill="#e6e9f0">EX</text>
+    </g>
+    <g>
+      <rect x="470" y="232" width="100" height="92" rx="12" fill="#111a35" stroke="#4ecdc4" stroke-width="2.5"/>
+      <text x="520" y="286" fill="#e6e9f0">MEM</text>
+    </g>
+    <g>
+      <rect x="590" y="232" width="100" height="92" rx="12" fill="#111a35" stroke="#4ecdc4" stroke-width="2.5"/>
+      <text x="640" y="286" fill="#e6e9f0">WB</text>
+    </g>
+  </g>
+
+  <!-- arrows between stages -->
+  <g stroke="#4ecdc4" stroke-width="4">
+    <line x1="212" y1="278" x2="228" y2="278" marker-end="url(#arrow3)"/>
+    <line x1="332" y1="278" x2="348" y2="278" marker-end="url(#arrow3)"/>
+    <line x1="452" y1="278" x2="468" y2="278" marker-end="url(#arrow3)"/>
+    <line x1="572" y1="278" x2="588" y2="278" marker-end="url(#arrow3)"/>
+  </g>
+
+  <!-- verification badge -->
+  <g transform="translate(320,372)">
+    <rect x="0" y="0" width="160" height="44" rx="22" fill="#4ecdc4" fill-opacity="0.14" stroke="#4ecdc4" stroke-width="1.5"/>
+    <circle cx="30" cy="22" r="12" fill="#4caf50"/>
+    <path d="M24 22l4 4l8 -9" fill="none" stroke="#0a1226" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="94" y="29" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="19" font-weight="700" fill="#e6e9f0">64/64 PASS</text>
+  </g>
+
+  <text x="400" y="452" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="14" letter-spacing="2" fill="#94a2c4">SystemVerilog · rv32-bmarks suite</text>
+</svg>

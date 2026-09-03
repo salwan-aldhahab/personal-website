@@ -44,15 +44,99 @@
         <p class="eyebrow">About</p>
         <h2>Who I am</h2>
       </div>
-      <div class="about__grid">
-        <p>I enjoy turning ideas into simple pages. I focus on clarity, usability, and readable code.</p>
-        <ul class="pill-list">
-          <li>HTML & CSS</li>
-          <li>JavaScript</li>
-          <li>Responsive design</li>
-          <li>Accessibility</li>
-        </ul>
+      <div class="about">
+        <div class="about__text">
+          <p>I'm Salwan Aldhahab, a Computer Engineer who gets fired up by building across every layer of the stack.</p>
+          <p>I thrive in the space between transistors and applications, circuits and code — chasing problems wherever they lead, whether the answer lives in hardware or software.</p>
+          <blockquote class="about__quote">
+            What excites me most is <strong>co-design</strong>: that spark when a firmware choice reshapes the silicon, and a silicon constraint rewrites the code. It's where I do my best work.
+          </blockquote>
+          <p>I hold a Specialized Honours BEng in Computer Engineering from York University — and I'm just getting started. To me, engineering isn't about what you already know; it's about how fast and how eagerly you learn what you don't.</p>
+        </div>
+
+        <aside class="about__visual">
+          <svg class="codesign" viewBox="0 0 340 200" role="img" aria-label="A silicon chip and code exchanging constraints and firmware in a continuous co-design loop">
+            <defs>
+              <marker id="cd-arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+                <path d="M0 0L6 3L0 6Z" fill="#4ecdc4"/>
+              </marker>
+              <marker id="cd-arrow-o" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+                <path d="M0 0L6 3L0 6Z" fill="#f77f00"/>
+              </marker>
+            </defs>
+
+            <!-- top arc: silicon constraints flow to code -->
+            <path class="codesign__flow" d="M118 82 C150 44 190 44 222 82" fill="none" stroke="#4ecdc4" stroke-width="2.5" marker-end="url(#cd-arrow)"/>
+            <text x="170" y="38" text-anchor="middle" class="codesign__edge" fill="#4ecdc4">constraints</text>
+
+            <!-- bottom arc: firmware flows back to silicon -->
+            <path class="codesign__flow codesign__flow--rev" d="M222 118 C190 156 150 156 118 118" fill="none" stroke="#f77f00" stroke-width="2.5" marker-end="url(#cd-arrow-o)"/>
+            <text x="170" y="178" text-anchor="middle" class="codesign__edge" fill="#f77f00">firmware</text>
+
+            <!-- left node: silicon -->
+            <g>
+              <rect x="44" y="64" width="72" height="72" rx="14" fill="#0e1a34" stroke="#4ecdc4" stroke-width="2"/>
+              <g stroke="#4ecdc4" stroke-width="2" stroke-linecap="round">
+                <line x1="62" y1="56" x2="62" y2="64"/><line x1="80" y1="56" x2="80" y2="64"/><line x1="98" y1="56" x2="98" y2="64"/>
+                <line x1="62" y1="136" x2="62" y2="144"/><line x1="80" y1="136" x2="80" y2="144"/><line x1="98" y1="136" x2="98" y2="144"/>
+              </g>
+              <rect x="66" y="86" width="28" height="28" rx="4" fill="none" stroke="#4ecdc4" stroke-width="1.6" opacity="0.7"/>
+            </g>
+            <text x="80" y="166" text-anchor="middle" class="codesign__label">SILICON</text>
+
+            <!-- right node: code -->
+            <g>
+              <rect x="224" y="64" width="72" height="72" rx="14" fill="#0e1a34" stroke="#f77f00" stroke-width="2"/>
+              <text x="260" y="109" text-anchor="middle" class="codesign__glyph" fill="#f77f00">&lt;/&gt;</text>
+            </g>
+            <text x="260" y="166" text-anchor="middle" class="codesign__label">CODE</text>
+
+            <!-- center label -->
+            <text x="170" y="104" text-anchor="middle" class="codesign__center">CO·DESIGN</text>
+          </svg>
+          <p class="about__visual-caption">Hardware &amp; software, in a continuous loop</p>
+        </aside>
       </div>
+
+      <ul class="about__highlights">
+        <li class="highlight">
+          <span class="highlight__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10 12 5 2 10l10 5 10-5z"/>
+              <path d="M6 12v5c0 1.2 2.7 3 6 3s6-1.8 6-3v-5"/>
+              <path d="M22 10v6"/>
+            </svg>
+          </span>
+          <div>
+            <p class="highlight__title">Specialized Honours BEng</p>
+            <p class="highlight__sub">Computer Engineering · York University</p>
+          </div>
+        </li>
+        <li class="highlight">
+          <span class="highlight__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="7" width="10" height="10" rx="2"/>
+              <path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/>
+            </svg>
+          </span>
+          <div>
+            <p class="highlight__title">Hardware</p>
+            <p class="highlight__sub">RTL · FPGA · ASIC · embedded</p>
+          </div>
+        </li>
+        <li class="highlight">
+          <span class="highlight__icon highlight__icon--accent" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="8 7 3 12 8 17"/>
+              <polyline points="16 7 21 12 16 17"/>
+            </svg>
+          </span>
+          <div>
+            <p class="highlight__title">Software</p>
+            <p class="highlight__sub">Full-stack · DSP · systems</p>
+          </div>
+        </li>
+      </ul>
     </section>
 
     <section class="section" id="projects">
@@ -62,92 +146,104 @@
       </div>
       <div class="card-grid">
         <article class="card card--project">
-          <div class="card__meta">
-            <span class="card__num">01</span>
-            <span class="card__tag">Embedded Systems</span>
+          <div class="card__media">
+            <img src="images/ecg/device-worn.jpg" alt="Wearable ECG monitor with 3D-printed enclosure and electrode leads">
           </div>
-          <h3>Wearable ECG Holter Monitor</h3>
-          <p>Wearable ESP32 + AD8232 node that streams real-time ECG over Wi-Fi through an 8-stage DSP pipeline to a live browser dashboard.</p>
-          <ul class="pill-list">
-            <li>ESP32</li>
-            <li>Django Channels</li>
-            <li>SciPy</li>
-            <li>Chart.js</li>
-          </ul>
-          <a href="projects/project-1.html" class="text-link">Read more →</a>
+          <div class="card__body">
+            <div class="card__meta">
+              <span class="card__num">01</span>
+              <span class="card__tag">Embedded Systems</span>
+            </div>
+            <h3>Wearable ECG Holter Monitor</h3>
+            <p>Wearable ESP32 + AD8232 node that streams real-time ECG over Wi-Fi through an 8-stage DSP pipeline to a live browser dashboard.</p>
+            <ul class="pill-list">
+              <li>ESP32</li>
+              <li>Django Channels</li>
+              <li>SciPy</li>
+              <li>Chart.js</li>
+            </ul>
+            <a href="projects/project-1.html" class="text-link">Read more <span class="text-link__arrow" aria-hidden="true">→</span></a>
+          </div>
         </article>
         <article class="card card--project">
-          <div class="card__meta">
-            <span class="card__num">02</span>
-            <span class="card__tag">Digital Systems</span>
+          <div class="card__media card__media--art">
+            <img src="images/covers/project-02.svg" alt="Diagram of a RISC-V CPU streaming UART input to a VGA display">
           </div>
-          <h3>32-bit RISC-V Processor (UART + VGA)</h3>
-          <p>Custom RV32I CPU on the DE10-Lite FPGA — instructions streamed over UART through a 5-stage pipeline with valid/flush handshakes, register state on VGA.</p>
-          <ul class="pill-list">
-            <li>Verilog</li>
-            <li>RISC-V</li>
-            <li>FPGA</li>
-            <li>VGA</li>
-          </ul>
-          <a href="projects/project-2.html" class="text-link">Read more →</a>
+          <div class="card__body">
+            <div class="card__meta">
+              <span class="card__num">02</span>
+              <span class="card__tag">Digital Systems</span>
+            </div>
+            <h3>32-bit RISC-V Processor (UART + VGA)</h3>
+            <p>Custom RV32I CPU on the DE10-Lite FPGA — instructions streamed over UART through a 5-stage pipeline with valid/flush handshakes, register state on VGA.</p>
+            <ul class="pill-list">
+              <li>Verilog</li>
+              <li>RISC-V</li>
+              <li>FPGA</li>
+              <li>VGA</li>
+            </ul>
+            <a href="projects/project-2.html" class="text-link">Read more <span class="text-link__arrow" aria-hidden="true">→</span></a>
+          </div>
         </article>
         <article class="card card--project">
-          <div class="card__meta">
-            <span class="card__num">03</span>
-            <span class="card__tag">Computer Architecture</span>
+          <div class="card__media card__media--art">
+            <img src="images/covers/project-03.svg" alt="Five-stage RISC-V pipeline diagram with a forwarding path, verified 64 of 64">
           </div>
-          <h3>Pipelined RV32I RISC-V Core</h3>
-          <p>Five-stage RV32I core in SystemVerilog with a forwarding/stall/flush hazard unit — verified across the full rv32-bmarks suite (64/64 pass).</p>
-          <ul class="pill-list">
-            <li>SystemVerilog</li>
-            <li>RV32I</li>
-            <li>Pipeline</li>
-            <li>Verification</li>
-          </ul>
-          <a href="projects/project-3.html" class="text-link">Read more →</a>
+          <div class="card__body">
+            <div class="card__meta">
+              <span class="card__num">03</span>
+              <span class="card__tag">Computer Architecture</span>
+            </div>
+            <h3>Pipelined RV32I RISC-V Core</h3>
+            <p>Five-stage RV32I core in SystemVerilog with a forwarding/stall/flush hazard unit — verified across the full rv32-bmarks suite (64/64 pass).</p>
+            <ul class="pill-list">
+              <li>SystemVerilog</li>
+              <li>RV32I</li>
+              <li>Pipeline</li>
+              <li>Verification</li>
+            </ul>
+            <a href="projects/project-3.html" class="text-link">Read more <span class="text-link__arrow" aria-hidden="true">→</span></a>
+          </div>
         </article>
         <article class="card card--project">
-          <div class="card__meta">
-            <span class="card__num">04</span>
-            <span class="card__tag">Digital VLSI</span>
+          <div class="card__media">
+            <img src="images/alu-rtl-to-gds/fig16_hier_pnr.png" alt="Innovus place-and-route layout of the 32-bit hierarchical ALU">
           </div>
-          <h3>32-bit ALU — RTL to GDSII</h3>
-          <p>Complete Cadence ASIC flow for a bit-slice 32-bit ALU on GPDK045 45 nm — RTL, synthesis, place-and-route, signoff and pad-frame integration.</p>
-          <ul class="pill-list">
-            <li>Verilog</li>
-            <li>Cadence</li>
-            <li>45 nm</li>
-            <li>ASIC</li>
-          </ul>
-          <a href="projects/project-4.html" class="text-link">Read more →</a>
+          <div class="card__body">
+            <div class="card__meta">
+              <span class="card__num">04</span>
+              <span class="card__tag">Digital VLSI</span>
+            </div>
+            <h3>32-bit ALU — RTL to GDSII</h3>
+            <p>Complete Cadence ASIC flow for a bit-slice 32-bit ALU on GPDK045 45 nm — RTL, synthesis, place-and-route, signoff and pad-frame integration.</p>
+            <ul class="pill-list">
+              <li>Verilog</li>
+              <li>Cadence</li>
+              <li>45 nm</li>
+              <li>ASIC</li>
+            </ul>
+            <a href="projects/project-4.html" class="text-link">Read more <span class="text-link__arrow" aria-hidden="true">→</span></a>
+          </div>
         </article>
         <article class="card card--project">
-          <div class="card__meta">
-            <span class="card__num">05</span>
-            <span class="card__tag">Full-Stack Web App</span>
+          <div class="card__media card__media--art">
+            <img src="images/covers/project-05.svg" alt="YUPlanner web app showing a weekly course schedule built with React, Spring Boot and MySQL">
           </div>
-          <h3>YUPlanner</h3>
-          <p>Three-tier academic planner — React SPA + Spring Boot REST API + MySQL — with course scheduling, professor ratings and PDF export across student/professor/advisor roles.</p>
-          <ul class="pill-list">
-            <li>React</li>
-            <li>Spring Boot</li>
-            <li>MySQL</li>
-            <li>REST</li>
-          </ul>
-          <a href="projects/project-5.html" class="text-link">Read more →</a>
-        </article>
-        <article class="card card--project">
-          <div class="card__meta">
-            <span class="card__num">06</span>
-            <span class="card__tag">Category</span>
+          <div class="card__body">
+            <div class="card__meta">
+              <span class="card__num">05</span>
+              <span class="card__tag">Full-Stack Web App</span>
+            </div>
+            <h3>YUPlanner</h3>
+            <p>Three-tier academic planner — React SPA + Spring Boot REST API + MySQL — with course scheduling, professor ratings and PDF export across student/professor/advisor roles.</p>
+            <ul class="pill-list">
+              <li>React</li>
+              <li>Spring Boot</li>
+              <li>MySQL</li>
+              <li>REST</li>
+            </ul>
+            <a href="projects/project-5.html" class="text-link">Read more <span class="text-link__arrow" aria-hidden="true">→</span></a>
           </div>
-          <h3>Project Six</h3>
-          <p>A short description of what this project is and what problem it solves.</p>
-          <ul class="pill-list">
-            <li>Tool A</li>
-            <li>Tool B</li>
-          </ul>
-          <a href="projects/project-6.html" class="text-link">Read more →</a>
         </article>
       </div>
     </section>

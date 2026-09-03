@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="RISC-V processor streaming UART input to a VGA display">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#13213f"/>
+      <stop offset="1" stop-color="#0a1226"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.4" r="0.75">
+      <stop offset="0" stop-color="#4ecdc4" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#4ecdc4" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#4ecdc4" stroke-opacity="0.06"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <path d="M0 0L7 3L0 6Z" fill="#4ecdc4"/>
+    </marker>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <rect width="800" height="500" fill="url(#grid)"/>
+  <rect width="800" height="500" fill="url(#glow)"/>
+
+  <text x="48" y="62" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="20" font-weight="600" letter-spacing="3" fill="#4ecdc4">RISC-V · UART + VGA</text>
+  <text x="752" y="70" text-anchor="end" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="46" font-weight="700" fill="#ffffff" fill-opacity="0.22">02</text>
+
+  <!-- UART serial input -->
+  <text x="140" y="180" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="18" font-weight="600" fill="#94a2c4">UART</text>
+  <path d="M70 250 h24 v-34 h24 v34 h24 v-34 h24 v34 h24 v-34 h24" fill="none" stroke="#f77f00" stroke-width="4" stroke-linejoin="round"/>
+  <line x1="238" y1="250" x2="300" y2="250" stroke="#4ecdc4" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <!-- CPU chip -->
+  <g>
+    <rect x="316" y="176" width="168" height="148" rx="14" fill="#111a35" stroke="#4ecdc4" stroke-width="2.5"/>
+    <g fill="#4ecdc4">
+      <rect x="336" y="164" width="10" height="14" rx="2"/><rect x="366" y="164" width="10" height="14" rx="2"/><rect x="396" y="164" width="10" height="14" rx="2"/><rect x="426" y="164" width="10" height="14" rx="2"/><rect x="456" y="164" width="10" height="14" rx="2"/>
+      <rect x="336" y="322" width="10" height="14" rx="2"/><rect x="366" y="322" width="10" height="14" rx="2"/><rect x="396" y="322" width="10" height="14" rx="2"/><rect x="426" y="322" width="10" height="14" rx="2"/><rect x="456" y="322" width="10" height="14" rx="2"/>
+    </g>
+    <text x="400" y="244" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="34" font-weight="700" fill="#e6e9f0">RV32I</text>
+    <text x="400" y="272" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="15" letter-spacing="2" fill="#94a2c4">CPU CORE</text>
+  </g>
+  <line x1="500" y1="250" x2="560" y2="250" stroke="#4ecdc4" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <!-- VGA color bars -->
+  <text x="655" y="180" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="18" font-weight="600" fill="#94a2c4">VGA</text>
+  <g>
+    <rect x="576" y="208" width="158" height="84" rx="8" fill="#0a1226" stroke="#26355c"/>
+    <rect x="584" y="216" width="21" height="68" fill="#ffffff"/>
+    <rect x="605" y="216" width="21" height="68" fill="#f4d35e"/>
+    <rect x="626" y="216" width="21" height="68" fill="#4ecdc4"/>
+    <rect x="647" y="216" width="21" height="68" fill="#4caf50"/>
+    <rect x="668" y="216" width="21" height="68" fill="#e05a8a"/>
+    <rect x="689" y="216" width="21" height="68" fill="#f77f00"/>
+    <rect x="710" y="216" width="21" height="68" fill="#3a6df0"/>
+  </g>
+
+  <!-- 5-stage pipeline hint -->
+  <g transform="translate(0,382)">
+    <text x="400" y="14" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',system-ui,sans-serif" font-size="14" letter-spacing="2" fill="#94a2c4">5-STAGE PIPELINE · DE10-LITE FPGA</text>
+    <g fill="#4ecdc4" fill-opacity="0.35">
+      <rect x="300" y="30" width="34" height="20" rx="4"/><rect x="342" y="30" width="34" height="20" rx="4"/><rect x="384" y="30" width="34" height="20" rx="4"/><rect x="426" y="30" width="34" height="20" rx="4"/><rect x="468" y="30" width="34" height="20" rx="4"/>
+    </g>
+  </g>
+</svg>
